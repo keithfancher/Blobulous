@@ -55,6 +55,16 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.rect.top += self.change_y
         self.rect.left += self.change_x
+        
+        # For now, don't let player off-screen. Might change this up later.
+        if self.rect.left <= 0:
+            self.rect.left = 0
+        if self.rect.right >= SCREEN_W:
+            self.rect.right = SCREEN_W
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_H:
+            self.rect.bottom = SCREEN_H
 
     # Add an enemy to the targeted group
     def target_enemy(self, enemy):
