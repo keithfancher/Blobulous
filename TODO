@@ -1,5 +1,10 @@
+* what to do when player goes off-screen?
+    + maybe limit the player to a smaller rect in the screen?
+    + this would be good for multiplayer too... each player gets their own side
+      of the screen
 * score!
 * actually show text and whatnot
 * real, non-square graphics
 * powerdowns?
 * targeting reticule that can grow or shrink... another powerup/down?
+* multiplayer?

@@ -2,14 +2,11 @@ import random
 import pygame
 
 from enemy import Enemy
+from settings import *
 
-# TODO: doesn't work for some reason
-#from blobulous import SCREEN_W, SCREEN_H
-SCREEN_W = 800
-SCREEN_H = 600
 
 POWERUP_SIZE = 12
-POWERUP_COLOR = (0, 255, 0)
+POWERUP_COLOR = GREEN
 
 
 # Inherits from Enemy class. That doesn't quite make sense, conceptually. They

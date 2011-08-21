@@ -1,13 +1,10 @@
 import random
 import pygame
 
-# TODO: doesn't work for some reason
-#from blobulous import SCREEN_W, SCREEN_H
-SCREEN_W = 800
-SCREEN_H = 600
+from settings import *
 
 ENEMY_SIZE = 15
-ENEMY_COLOR = (255, 255, 255)
+ENEMY_COLOR = WHITE
 
 class Enemy(pygame.sprite.Sprite):
 

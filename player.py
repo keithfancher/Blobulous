@@ -1,10 +1,11 @@
 import pygame
 
 from powerup import Powerup
+from settings import *
 
 PLAYER_SIZE = 10
-PLAYER_COLOR = (0, 0, 255)
-TARGET_LINE_COLOR = (255, 0, 0)
+PLAYER_COLOR = BLUE
+TARGET_LINE_COLOR = RED
 
 class Player(pygame.sprite.Sprite):
  
@@ -79,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         # if there are sprites in the targeted group
         if(self.targeted):
             for target in self.targeted:
-                pygame.draw.line(surface, TARGET_LINE_COLOR,
+                pygame.draw.aaline(surface, TARGET_LINE_COLOR,
                     self.rect.center, target.rect.center)
 
     def power_up(self):
