@@ -111,33 +111,30 @@ while True:
     # Is there a better way to check for 1/20? This works, I guess...
     if random.randint(0, 19) == 10:
         enemies.add(spawn_enemy())
+        # Testing if enemies are actually destroyed once they're off-screen
+        print "Total enemies: %d" % len(enemies)
 
     # And a 1/50 chance a new powerup will spawn...
     if random.randint(0, 49) == 20:
         enemies.add(spawn_powerup())
 
     # If a player has collided with anything, he's dead!        
+    # Note that colliding with a Powerup will also kill the player. He's gotta
+    # SHOOT the powerup if he wants it.
     if not PLAYER_INVINCIBLE:
         if pygame.sprite.spritecollideany(player, enemies):
             print "You're dead. :("
                  
-    # This actually moves the player block based on the current speed
+    # Moves the player based on the current speed/direction
     player.update()
 
     # This calles the update() function on every Sprite in the group, magically!
     enemies.update()
      
-    # -- Draw everything
-    # Clear screen
+    # Draws everything
     screen.fill(BLACK)
-
-    # Draw target lines
     player.draw_target_lines(screen)
-     
-    # Draw player
     player_group.draw(screen)
-    
-    # Draw enemies
     enemies.draw(screen)
 
     # Flip screen

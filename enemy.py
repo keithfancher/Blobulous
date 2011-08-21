@@ -60,13 +60,15 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.rect.top += self.delta_y
         self.rect.left += self.delta_x
+        # If we're more than 30 pixels off the screen, destroy the object
+        self.kill_if_offscreen()
 
-    # Check this then kill any enemies that go off the screen.
-    # Not sure if that's necessary, maybe PyGame automatically doesn't care
-    # about off-screen Sprite objects? Seems prudent to kill 'em though.
-    def is_offscreen(self):
-        # TODO: can do this easily with rects?
-        pass
+    # Kill any enemies that go more than 30 pixels off the screen
+    def kill_if_offscreen(self):
+        if self.rect.left < -30 or self.rect.left > SCREEN_W + 30:
+            self.kill()
+        elif self.rect.top < -30 or self.rect.top > SCREEN_H + 30:
+            self.kill()
 
 
 # Spawns a single randomly positioned and randomly moving Enemy
