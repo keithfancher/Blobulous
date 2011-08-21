@@ -14,11 +14,14 @@ class Player(pygame.sprite.Sprite):
     change_x = 0
     change_y = 0
 
-    # all the enemies/powerups the player is targeting
+    # All the enemies/powerups the player is targeting
     targeted = pygame.sprite.Group()
 
     # Max targets can have at once... this will increase w/ powerups
-    max_targets = 3;
+    max_targets = 3
+
+    # Beginning number of extra lives
+    extra_lives = 3
      
     # -- Methods
 
@@ -87,3 +90,9 @@ class Player(pygame.sprite.Sprite):
         # can never target fewer than ONE enemy/powerup
         if self.max_targets > 1:
             self.max_targets -= 1
+
+    def decrease_lives(self):
+        self.extra_lives -= 1
+
+    def is_dead(self):
+        return self.extra_lives < 0

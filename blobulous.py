@@ -112,7 +112,7 @@ while True:
     if random.randint(0, 19) == 10:
         enemies.add(spawn_enemy())
         # Testing if enemies are actually destroyed once they're off-screen
-        print "Total enemies: %d" % len(enemies)
+        #print "Total enemies: %d" % len(enemies)
 
     # And a 1/50 chance a new powerup will spawn...
     if random.randint(0, 49) == 20:
@@ -121,9 +121,22 @@ while True:
     # If a player has collided with anything, he's dead!        
     # Note that colliding with a Powerup will also kill the player. He's gotta
     # SHOOT the powerup if he wants it.
+    #
+    # can't do this, gotta check for a particular sprite so I know which one
+    # will blow up when it hits the player.
     if not PLAYER_INVINCIBLE:
         if pygame.sprite.spritecollideany(player, enemies):
-            print "You're dead. :("
+            # This gets a list of enemies/powerups that have collided with the
+            # player. The last argument does the work of calling kill() on any
+            # of those objects.
+            pygame.sprite.spritecollide(player, enemies, True)
+            player.decrease_lives()
+            if player.is_dead():
+                print "That was your last life! You're dead."
+                print "Shutting everything down..."
+                sys.exit(0)
+            else:
+                print "You lost a life. Remaining: %d" % player.extra_lives
                  
     # Moves the player based on the current speed/direction
     player.update()
