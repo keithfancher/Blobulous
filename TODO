@@ -1,12 +1,19 @@
+* fix weird input bug when screen loses focus
+
+* better collision... tighter hitboxes
+
+* should enemies bounce off of each other? or blow each other up?
+
+* actually show text and whatnot
+
+* powerdowns?
+
+* targeting reticule that can grow or shrink... another powerup/down?
+
+* multiplayer?
+
 * what to do when player goes off-screen?
     + maybe limit the player to a smaller rect in the screen?
     + this would be good for multiplayer too... each player gets their own side
       of the screen
-* score!
-* dying should reset targets back down to the lower limit (2?)
-* should enemies bounce off of each other? or blow each other up?
-* actually show text and whatnot
-* powerdowns?
-* targeting reticule that can grow or shrink... another powerup/down?
-* better collision... tighter hitboxes
-* multiplayer?
+    + for now just don't let 'em go off-screen

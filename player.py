@@ -113,8 +113,10 @@ class Player(pygame.sprite.Sprite):
         if self.max_targets > 1:
             self.max_targets -= 1
 
+    # Decrease lives and lower target # back to 2
     def decrease_lives(self):
         self.extra_lives -= 1
+        self.max_targets = 2
 
     def is_dead(self):
         return self.extra_lives < 0
