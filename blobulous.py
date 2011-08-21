@@ -22,6 +22,7 @@ SCREEN_H = 600
 NUM_ENEMIES = 8
 NUM_POWERUPS = 3
 FPS = 30
+PLAYER_INVINCIBLE = False
 
  
 # PyGame init stuff
@@ -114,6 +115,11 @@ while True:
     # And a 1/50 chance a new powerup will spawn...
     if random.randint(0, 49) == 20:
         enemies.add(spawn_powerup())
+
+    # If a player has collided with anything, he's dead!        
+    if not PLAYER_INVINCIBLE:
+        if pygame.sprite.spritecollideany(player, enemies):
+            print "You're dead. :("
                  
     # This actually moves the player block based on the current speed
     player.update()
