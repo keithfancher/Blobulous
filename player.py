@@ -1,5 +1,7 @@
 import pygame
 
+from powerup import Powerup
+
 PLAYER_SIZE = 10
 PLAYER_COLOR = (0, 0, 255)
 TARGET_LINE_COLOR = (255, 0, 0)
@@ -12,7 +14,7 @@ class Player(pygame.sprite.Sprite):
     change_x = 0
     change_y = 0
 
-    # all the enemies the player is targeting
+    # all the enemies/powerups the player is targeting
     targeted = pygame.sprite.Group()
 
     # Max targets can have at once... this will increase w/ powerups
@@ -61,6 +63,12 @@ class Player(pygame.sprite.Sprite):
     # Kills all targeted enemies
     def kill_targeted(self):
         for target in self.targeted:
+            # Is this the best way to check for Powerup vs. Enemy?
+            if isinstance(target, Powerup):
+                self.power_up()
+            # Eventually some score code should probably go here
+            else:
+                pass
             target.kill()
         
     # Draw the lines from self to targets
@@ -68,5 +76,13 @@ class Player(pygame.sprite.Sprite):
         # if there are sprites in the targeted group
         if(self.targeted):
             for target in self.targeted:
-                # target from and to the *middle* of the objects
-                pygame.draw.line(surface, TARGET_LINE_COLOR, self.rect.center, (target.rect.center))
+                pygame.draw.line(surface, TARGET_LINE_COLOR,
+                    self.rect.center, target.rect.center)
+
+    def power_up(self):
+        self.max_targets += 1
+
+    def power_down(self):
+        # can never target fewer than ONE enemy/powerup
+        if self.max_targets > 1:
+            self.max_targets -= 1

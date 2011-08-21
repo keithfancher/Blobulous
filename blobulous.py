@@ -6,6 +6,7 @@ import pygame
 
 from player import Player
 from enemy import Enemy
+from powerup import Powerup
  
 # Colors
 BLACK = (0, 0, 0)
@@ -19,6 +20,7 @@ SCREEN_H = 600
 
 # Random constants for testing
 NUM_ENEMIES = 5
+NUM_POWERUPS = 3
 FPS = 30
 
  
@@ -38,6 +40,12 @@ player_group = pygame.sprite.RenderPlain((player))
 enemies = pygame.sprite.RenderPlain()
 for i in range(0, NUM_ENEMIES):
     enemies.add(Enemy(randomize=True))
+
+# Create NUM_POWERUPS random powerups
+# These just live in the "enemies" group, makes things easier... they're all
+# Sprite objects anyway, and they're basically just benign enemies
+for i in range(0, NUM_POWERUPS):
+    enemies.add(Powerup(randomize=True))
 
 # Mouse state... need to know if the button is held down or not, not just when
 # it's pressed or released. Maybe PyGame has a better way to do this?
@@ -112,7 +120,7 @@ while True:
     
     # Draw enemies
     enemies.draw(screen)
-     
+
     # Flip screen
     pygame.display.flip()
      
