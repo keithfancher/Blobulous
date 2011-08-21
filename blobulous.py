@@ -39,7 +39,8 @@ player_group = pygame.sprite.RenderPlain((player))
 # Create NUM_ENEMIES random enemies
 enemies = pygame.sprite.RenderPlain()
 for i in range(0, NUM_ENEMIES):
-    enemies.add(Enemy(randomize=True))
+    new_enemy = Enemy(randomize=True)
+    enemies.add(new_enemy)
 
 # Create NUM_POWERUPS random powerups
 # These just live in the "enemies" group, makes things easier... they're all
@@ -107,6 +108,9 @@ while True:
                  
     # This actually moves the player block based on the current speed
     player.update()
+
+    # This calles the update() function on every Sprite in the group, magically!
+    enemies.update()
      
     # -- Draw everything
     # Clear screen

@@ -15,8 +15,8 @@ class Powerup(pygame.sprite.Sprite):
     # -- Attributes
 
     # Set speed vector
-    change_x=0
-    change_y=0
+    change_x = 0
+    change_y = 0
 
     # Whether this powerup is currently targeted by the player
     targeted = False

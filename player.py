@@ -81,6 +81,7 @@ class Player(pygame.sprite.Sprite):
 
     def power_up(self):
         self.max_targets += 1
+        print "Powered up! Targets: %d" % self.max_targets
 
     def power_down(self):
         # can never target fewer than ONE enemy/powerup

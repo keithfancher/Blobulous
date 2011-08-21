@@ -14,8 +14,8 @@ class Enemy(pygame.sprite.Sprite):
     # -- Attributes
 
     # Set speed vector
-    change_x=0
-    change_y=0
+    delta_x = 0
+    delta_y = 0
 
     # Whether this enemy is currently targeted by the player
     targeted = False
@@ -25,7 +25,7 @@ class Enemy(pygame.sprite.Sprite):
     # TODO: not sure if I have to set default values for x and y, but I want to
     # be able to just go Enemy(randomize=True) without passing in x and y
     # values, so default values seem necessary.
-    def __init__(self, x=0, y=0, randomize=False):
+    def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
          
@@ -38,17 +38,35 @@ class Enemy(pygame.sprite.Sprite):
         
         if randomize == False:
             self.rect.topleft = [x, y]
+            self.delta_x = dx
+            self.delta_y = dy
         else:
+            # Random initial position
             rand_x = random.randint(0, SCREEN_W - ENEMY_SIZE)
             rand_y = random.randint(0, SCREEN_H - ENEMY_SIZE)
             self.rect.topleft = [rand_x, rand_y]
+
+            # Random initial speed and direction
+            self.delta_x = random.randint(-5, 6)
+            self.delta_y = random.randint(-5, 6)
      
     # Change the speed of the enemy
     def changespeed(self, x, y):
-        self.change_x += x
-        self.change_y += y
+        self.delta_x += x
+        self.delta_y += y
          
     # Find a new position for the enemy
     def update(self):
-        self.rect.top += self.change_y
-        self.rect.left += self.change_x
+        self.rect.top += self.delta_y
+        self.rect.left += self.delta_x
+
+    # Check this then kill any enemies that go off the screen.
+    # Not sure if that's necessary, maybe PyGame automatically doesn't care
+    # about off-screen Sprite objects? Seems prudent to kill 'em though.
+    def is_offscreen(self):
+        # TODO: can do this easily with rects?
+        pass
+
+
+def spawn_enemy():
+    pass
