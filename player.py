@@ -23,6 +23,12 @@ class Player(pygame.sprite.Sprite):
 
     # Beginning number of extra lives
     extra_lives = 3
+
+    # Score!
+    # How about this: Everythign you kill is worth 100 points singly, but once
+    # the initial score is added up, it's multiplied by the number you've
+    # targeted. That's a good start...
+    score = 0
      
     # -- Methods
 
@@ -68,6 +74,9 @@ class Player(pygame.sprite.Sprite):
 
     # Kills all targeted enemies
     def kill_targeted(self):
+        # 100 points for every enemy killed, then an additional multiplier for
+        # killing mutliple enemies in one go.
+        self.score += 100 * len(self.targeted) * len(self.targeted)
         for target in self.targeted:
             # Is this the best way to check for Powerup vs. Enemy?
             if isinstance(target, Powerup):

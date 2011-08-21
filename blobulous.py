@@ -80,6 +80,7 @@ def main():
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_down = False
                 player.kill_targeted()
+                print "Score: %d" % player.score
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_down = True
@@ -122,6 +123,7 @@ def main():
                 player.decrease_lives()
                 if player.is_dead():
                     print "That was your last life! You're dead."
+                    print "Final score: %d" % player.score
                     print "Shutting everything down..."
                     sys.exit()
                 else:
