@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 import sys
-
+import random
 import pygame
 
 from player import Player
-from enemy import Enemy
-from powerup import Powerup
+from enemy import Enemy, spawn_enemy
+from powerup import Powerup, spawn_powerup
  
 # Colors
 BLACK = (0, 0, 0)
@@ -19,7 +19,7 @@ SCREEN_W = 800
 SCREEN_H = 600
 
 # Random constants for testing
-NUM_ENEMIES = 5
+NUM_ENEMIES = 8
 NUM_POWERUPS = 3
 FPS = 30
 
@@ -36,17 +36,16 @@ player = Player(SCREEN_W / 2, SCREEN_H / 2)
 # Does this really need its own Sprite Group?
 player_group = pygame.sprite.RenderPlain((player))
 
-# Create NUM_ENEMIES random enemies
+# Start by spawning NUM_ENEMIES random enemies
 enemies = pygame.sprite.RenderPlain()
 for i in range(0, NUM_ENEMIES):
-    new_enemy = Enemy(randomize=True)
-    enemies.add(new_enemy)
+    enemies.add(spawn_enemy())
 
 # Create NUM_POWERUPS random powerups
 # These just live in the "enemies" group, makes things easier... they're all
 # Sprite objects anyway, and they're basically just benign enemies
 for i in range(0, NUM_POWERUPS):
-    enemies.add(Powerup(randomize=True))
+    enemies.add(spawn_powerup())
 
 # Mouse state... need to know if the button is held down or not, not just when
 # it's pressed or released. Maybe PyGame has a better way to do this?
@@ -105,6 +104,16 @@ while True:
         for enemy in enemies:
             if enemy.rect.collidepoint(mouse_position):
                 player.target_enemy(enemy)
+
+    # For now, there's a 1/20 chance a new enemy will spawn. Later I'll make
+    # this based on timing, the level, the score, etc.
+    # Is there a better way to check for 1/20? This works, I guess...
+    if random.randint(0, 19) == 10:
+        enemies.add(spawn_enemy())
+
+    # And a 1/50 chance a new powerup will spawn...
+    if random.randint(0, 49) == 20:
+        enemies.add(spawn_powerup())
                  
     # This actually moves the player block based on the current speed
     player.update()

@@ -46,5 +46,41 @@ class Powerup(Enemy):
             self.delta_x = random.randint(-5, 6)
             self.delta_y = random.randint(-5, 6)
      
+
+# Spawns a single randomly positioned and randomly moving Powerup
+# TODO: this should just be in the fucking constructor of Powerup
 def spawn_powerup():
-    pass
+    # Directional constants... makes this shit a bit easier to read
+    TOP = 0
+    BOTTOM = 1
+    LEFT = 2
+    RIGHT = 3
+
+    # At top of screen, bottom, left, or right
+    spawn_location = random.randint(0, 3)
+
+    if spawn_location == TOP:
+        x_pos = random.randint(0, SCREEN_W - POWERUP_SIZE)
+        y_pos = -POWERUP_SIZE
+        dx = random.randint(-5, 5)
+        dy = random.randint(1, 5) # gotta move down
+
+    elif spawn_location == BOTTOM:
+        x_pos = random.randint(0, SCREEN_W - POWERUP_SIZE)
+        y_pos = SCREEN_H + POWERUP_SIZE
+        dx = random.randint(-5, 5)
+        dy = random.randint(-5, 0) # gotta move up
+
+    elif spawn_location == LEFT:
+        x_pos = -POWERUP_SIZE
+        y_pos = random.randint(0, SCREEN_H)
+        dx = random.randint(1, 5) # gotta move right
+        dy = random.randint(-5, 5)
+
+    elif spawn_location == RIGHT:
+        x_pos = SCREEN_W
+        y_pos = random.randint(0, SCREEN_H - POWERUP_SIZE)
+        dx = random.randint(-5, 0) # gotta move left
+        dy = random.randint(-5, 5)
+
+    return Powerup(x_pos, y_pos, dx, dy)
