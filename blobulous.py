@@ -19,23 +19,22 @@ def main():
      
     # Create the player object
     player = Player(SCREEN_W / 2, SCREEN_H / 2)
-
     # Does this really need its own Sprite Group?
     player_group = pygame.sprite.RenderPlain((player))
 
-    # Start by spawning NUM_INIT_ENEMIES random enemies
+    # Spawn NUM_INIT_ENEMIES random enemies
     enemies = pygame.sprite.RenderPlain()
     for i in range(0, NUM_INIT_ENEMIES):
         enemies.add(spawn_enemy())
 
-    # Create NUM_INIT_POWERUPS random powerups
-    # These just live in the "enemies" group, makes things easier... they're all
-    # Sprite objects anyway, and they're basically just benign enemies
+    # Spawn NUM_INIT_POWERUPS random powerups
+    # These just live in the "enemies" group, makes things easier... they're
+    # all Sprite objects anyway, and they're basically just benign enemies.
     for i in range(0, NUM_INIT_POWERUPS):
         enemies.add(spawn_powerup())
 
-    # Mouse state... need to know if the button is held down or not, not just when
-    # it's pressed or released. Maybe PyGame has a better way to do this?
+    # Mouse state... need to know if the button is held down or not, not just
+    # when it's pressed or released. Maybe PyGame has a better way to do this?
     mouse_down = False
      
     # Main event loop
@@ -85,19 +84,21 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_down = True
 
-        # Have to check if we're over an enemy with the mouse every frame even when
-        # there isn't a MOUSEMOTION event, 'cause the player could be holding down
-        # the button and an enemy could move under the mouse.
+        # Have to check if we're over an enemy with the mouse every frame even
+        # when there isn't a MOUSEMOTION event, 'cause the player could be
+        # holding down the button and an enemy could move under the mouse.
         #
-        # This seems pretty inefficient, there's probably a better way to do this.
+        # This seems pretty inefficient, there's probably a better way to do
+        # this.
         if mouse_down:
             mouse_position = pygame.mouse.get_pos()
             for enemy in enemies:
                 if enemy.rect.collidepoint(mouse_position):
                     player.target_enemy(enemy)
 
-        # For now, there's a 1/10 chance a new enemy will spawn. Later I'll make
-        # this based on timing, the level, the score, etc.
+        # For now, there's a 1/10 chance a new enemy will spawn. Later I'll
+        # make this based on timing, the level, the score, etc.
+        #
         # Is there a better way to check for 1/10? This works, I guess...
         if random.randint(0, 9) == 5:
             enemies.add(spawn_enemy())
@@ -109,16 +110,16 @@ def main():
             enemies.add(spawn_powerup())
 
         # If a player has collided with anything, loses a life!
-        # Note that colliding with a Powerup will also kill the player. He's gotta
-        # SHOOT the powerup if he wants it.
+        # Note that colliding with a Powerup will also kill the player. He's
+        # gotta SHOOT the powerup if he wants it.
         if not PLAYER_INVINCIBLE:
             if pygame.sprite.spritecollideany(player, enemies):
 
-                # This gets a list of enemies/powerups that have collided with the
-                # player. The last argument does the work of calling kill() on any
-                # of those objects.
-                # This function is a bit slow, so only call it when we already KNOW
-                # there's been a collision, instead of every frame.
+                # This gets a list of enemies/powerups that have collided with
+                # the player. The last argument does the work of calling kill()
+                # on any of those objects. This function is a bit slow, so only
+                # call it when we already KNOW there's been a collision,
+                # instead of every frame.
                 pygame.sprite.spritecollide(player, enemies, True)
                 player.decrease_lives()
                 if player.is_dead():
@@ -132,7 +133,7 @@ def main():
         # Moves the player based on the current speed/direction
         player.update()
 
-        # This calles the update() function on every Sprite in the group, magically!
+        # Calls the update() function on every Sprite in the group, magically!
         enemies.update()
          
         # Draws everything

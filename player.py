@@ -36,9 +36,7 @@ class Player(pygame.sprite.Sprite):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
          
-        # Set height, width
-#        self.image = pygame.Surface([PLAYER_SIZE, PLAYER_SIZE])
-#        self.image.fill((PLAYER_COLOR))
+        # Load the image
         self.image = pygame.image.load("images/player.png").convert()
         self.image.set_colorkey(BLACK)
  

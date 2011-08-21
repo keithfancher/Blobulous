@@ -8,8 +8,11 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 # Screen size
-SCREEN_W = 800
-SCREEN_H = 600
+#SCREEN_W = 800
+#SCREEN_H = 600
+# Widescreen testing...
+SCREEN_W = 1200
+SCREEN_H = 675
 
 # Random testing shit
 NUM_INIT_ENEMIES = 8

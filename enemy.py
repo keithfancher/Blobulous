@@ -26,9 +26,7 @@ class Enemy(pygame.sprite.Sprite):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
          
-        # Set height, width
-#        self.image = pygame.Surface([ENEMY_SIZE, ENEMY_SIZE])
-#        self.image.fill((ENEMY_COLOR))
+        # Load the image
         self.image = pygame.image.load("images/enemy.png").convert()
         self.image.set_colorkey(BLACK)
  

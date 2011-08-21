@@ -22,9 +22,7 @@ class Powerup(Enemy):
         # Call the parent's constructor (which calls Sprite's constructor...)
         Enemy.__init__(self, x, y, dx, dy, randomize)
          
-        # Set height, width
-#        self.image = pygame.Surface([POWERUP_SIZE, POWERUP_SIZE])
-#        self.image.fill((POWERUP_COLOR))
+        # Load the image
         self.image = pygame.image.load("images/powerup.png").convert()
         self.image.set_colorkey(BLACK)
  
