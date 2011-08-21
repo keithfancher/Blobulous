@@ -3,7 +3,7 @@ import pygame
 
 from settings import *
 
-ENEMY_SIZE = 15
+ENEMY_SIZE = 44
 ENEMY_COLOR = WHITE
 
 class Enemy(pygame.sprite.Sprite):
@@ -27,8 +27,10 @@ class Enemy(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
          
         # Set height, width
-        self.image = pygame.Surface([ENEMY_SIZE, ENEMY_SIZE])
-        self.image.fill((ENEMY_COLOR))
+#        self.image = pygame.Surface([ENEMY_SIZE, ENEMY_SIZE])
+#        self.image.fill((ENEMY_COLOR))
+        self.image = pygame.image.load("images/enemy.png").convert()
+        self.image.set_colorkey(BLACK)
  
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
@@ -57,14 +59,14 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.rect.top += self.delta_y
         self.rect.left += self.delta_x
-        # If we're more than 30 pixels off the screen, destroy the object
+        # If we're more than 60 pixels off the screen, destroy the object
         self.kill_if_offscreen()
 
-    # Kill any enemies that go more than 30 pixels off the screen
+    # Kill any enemies that go more than 60 pixels off the screen
     def kill_if_offscreen(self):
-        if self.rect.left < -30 or self.rect.left > SCREEN_W + 30:
+        if self.rect.left < -60 or self.rect.left > SCREEN_W + 60:
             self.kill()
-        elif self.rect.top < -30 or self.rect.top > SCREEN_H + 30:
+        elif self.rect.top < -60 or self.rect.top > SCREEN_H + 60:
             self.kill()
 
 

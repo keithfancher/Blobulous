@@ -3,8 +3,9 @@
     + this would be good for multiplayer too... each player gets their own side
       of the screen
 * score!
+* dying should reset targets back down to the lower limit (2?)
+* should enemies bounce off of each other? or blow each other up?
 * actually show text and whatnot
-* real, non-square graphics
 * powerdowns?
 * targeting reticule that can grow or shrink... another powerup/down?
 * multiplayer?

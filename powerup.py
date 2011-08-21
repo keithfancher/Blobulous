@@ -5,7 +5,7 @@ from enemy import Enemy
 from settings import *
 
 
-POWERUP_SIZE = 12
+POWERUP_SIZE = 25
 POWERUP_COLOR = GREEN
 
 
@@ -23,8 +23,10 @@ class Powerup(Enemy):
         Enemy.__init__(self, x, y, dx, dy, randomize)
          
         # Set height, width
-        self.image = pygame.Surface([POWERUP_SIZE, POWERUP_SIZE])
-        self.image.fill((POWERUP_COLOR))
+#        self.image = pygame.Surface([POWERUP_SIZE, POWERUP_SIZE])
+#        self.image.fill((POWERUP_COLOR))
+        self.image = pygame.image.load("images/powerup.png").convert()
+        self.image.set_colorkey(BLACK)
  
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()

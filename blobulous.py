@@ -95,16 +95,16 @@ def main():
                 if enemy.rect.collidepoint(mouse_position):
                     player.target_enemy(enemy)
 
-        # For now, there's a 1/20 chance a new enemy will spawn. Later I'll make
+        # For now, there's a 1/10 chance a new enemy will spawn. Later I'll make
         # this based on timing, the level, the score, etc.
-        # Is there a better way to check for 1/20? This works, I guess...
-        if random.randint(0, 19) == 10:
+        # Is there a better way to check for 1/10? This works, I guess...
+        if random.randint(0, 9) == 5:
             enemies.add(spawn_enemy())
             # Testing if enemies are actually destroyed once they're off-screen
             #print "Total enemies: %d" % len(enemies)
 
-        # And a 1/50 chance a new powerup will spawn...
-        if random.randint(0, 49) == 20:
+        # And a 1/100 chance a new powerup will spawn...
+        if random.randint(0, 99) == 42:
             enemies.add(spawn_powerup())
 
         # If a player has collided with anything, loses a life!

@@ -3,7 +3,7 @@ import pygame
 from powerup import Powerup
 from settings import *
 
-PLAYER_SIZE = 10
+PLAYER_SIZE = 20
 PLAYER_COLOR = BLUE
 TARGET_LINE_COLOR = RED
 
@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
     targeted = pygame.sprite.Group()
 
     # Max targets can have at once... this will increase w/ powerups
-    max_targets = 3
+    max_targets = 2
 
     # Beginning number of extra lives
     extra_lives = 3
@@ -31,12 +31,14 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
          
         # Set height, width
-        self.image = pygame.Surface([PLAYER_SIZE, PLAYER_SIZE])
-        self.image.fill((PLAYER_COLOR))
+#        self.image = pygame.Surface([PLAYER_SIZE, PLAYER_SIZE])
+#        self.image.fill((PLAYER_COLOR))
+        self.image = pygame.image.load("images/player.png").convert()
+        self.image.set_colorkey(BLACK)
  
         # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
-        self.rect.topleft = [x, y]
+        self.rect.center = [x, y]
      
     # Change the speed of the player
     def changespeed(self, x, y):
