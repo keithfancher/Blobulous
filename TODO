@@ -1,4 +1,11 @@
 * fix weird input bug when screen loses focus
+    + The problem is that the program only adjusts players speed/direction when
+      a button is pressed or released. If you're holding up, the window loses
+      focus, and you release up, the program won't know you've released it and
+      the player will keep moving up. What we need to do is check the STATE of
+      the keys at any given time, and adjust player movement based on that.
+      Should make controls more fluid as well, though it seems less efficient.
+      Alternatively, could just grab the keys...
 
 * better collision... tighter hitboxes
 

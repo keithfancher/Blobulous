@@ -36,6 +36,9 @@ def main():
     # Mouse state... need to know if the button is held down or not, not just
     # when it's pressed or released. Maybe PyGame has a better way to do this?
     mouse_down = False
+
+    # Testing this...
+    pygame.event.set_grab(True)
      
     # Main event loop
     while True:
