@@ -7,15 +7,21 @@
       Should make controls more fluid as well, though it seems less efficient.
       Alternatively, could just grab the keys...
 
+* visual indicator of how many enemies you can target, some kind of horizontal
+  bar that fills up as you approach your max number of targets, gives you a
+  clear sense of when you can fire for maximum score-age
+
 * better collision... tighter hitboxes
+
+* targeting reticule that can grow or shrink... another powerup/down?
+
+* pause
+
+* intro screen with instructions
 
 * should enemies bounce off of each other? or blow each other up?
 
-* actually show text and whatnot
-
 * powerdowns?
-
-* targeting reticule that can grow or shrink... another powerup/down?
 
 * multiplayer?
 

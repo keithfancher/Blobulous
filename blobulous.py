@@ -16,10 +16,16 @@ def main():
     screen = pygame.display.set_mode([SCREEN_W, SCREEN_H])
     pygame.display.set_caption('Blobulous')
     clock = pygame.time.Clock()
+
+    # Testing font stuff
+    if pygame.font:
+        font = pygame.font.Font(None, 30)
+    else:
+        print "Warning: fonts disabled. Install pygame.font!"
      
     # Create the player object
     player = Player(SCREEN_W / 2, SCREEN_H / 2)
-    # Does this really need its own Sprite Group?
+    # Doesn't need its own sprite group yet, but might be useful for multiplayer
     player_group = pygame.sprite.RenderPlain((player))
 
     # Spawn NUM_INIT_ENEMIES random enemies
@@ -37,7 +43,8 @@ def main():
     # when it's pressed or released. Maybe PyGame has a better way to do this?
     mouse_down = False
 
-    # Testing this...
+    # Grab input. Makes it easier to not lose focus when clicking around like a
+    # madman in windowed mode. Also solves an input bug.
     pygame.event.set_grab(True)
      
     # Main event loop
@@ -82,7 +89,6 @@ def main():
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_down = False
                 player.kill_targeted()
-                print "Score: %d" % player.score
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_down = True
@@ -144,6 +150,18 @@ def main():
         player.draw_target_lines(screen)
         player_group.draw(screen)
         enemies.draw(screen)
+
+        # Draw the score to the screen
+        # TODO: draw lives
+        if pygame.font:
+            # Recalculate the rect every time it's drawn, since the number can
+            # continually grow and take up more space. TODO: Really, only need
+            # to recalculate every time the score increases.
+            text = font.render(str(player.score), True, WHITE)
+            text_rect = text.get_rect()
+            text_rect.bottom = screen.get_rect().bottom - 8
+            text_rect.right = screen.get_rect().right - 10
+            screen.blit(text, text_rect)
 
         # Flip screen
         pygame.display.flip()
