@@ -3,14 +3,13 @@ import pygame
 from powerup import Powerup
 from settings import *
 
-PLAYER_SIZE = 20
-PLAYER_COLOR = BLUE
+
+PLAYER_SIZE = 20 # TODO: kill this
 TARGET_LINE_COLOR = RED
+
 
 class Player(pygame.sprite.Sprite):
  
-    # -- Attributes
-
     # Set speed vector
     change_x = 0
     change_y = 0
@@ -25,13 +24,11 @@ class Player(pygame.sprite.Sprite):
     extra_lives = 3
 
     # Score!
-    # How about this: Everythign you kill is worth 100 points singly, but once
-    # the initial score is added up, it's multiplied by the number you've
-    # targeted. That's a good start...
     score = 0
-     
-    # -- Methods
 
+    # This value is used for the circle collision detection
+    radius = 10
+     
     def __init__(self, x, y):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
@@ -39,11 +36,9 @@ class Player(pygame.sprite.Sprite):
         # Load the image
         self.image = pygame.image.load("images/player.png").convert()
         self.image.set_colorkey(BLACK)
- 
-        # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
-     
+
     # Change the speed of the player
     def changespeed(self, x, y):
         self.change_x += x

@@ -3,12 +3,9 @@ import pygame
 
 from settings import *
 
-ENEMY_SIZE = 44
-ENEMY_COLOR = WHITE
+ENEMY_SIZE = 44 # TODO: this is unnecessary, kill it
 
 class Enemy(pygame.sprite.Sprite):
-
-    # -- Attributes
 
     # Set speed vector
     delta_x = 0
@@ -16,12 +13,11 @@ class Enemy(pygame.sprite.Sprite):
 
     # Whether this enemy is currently targeted by the player
     targeted = False
-     
-    # -- Methods
 
-    # TODO: not sure if I have to set default values for x and y, but I want to
-    # be able to just go Enemy(randomize=True) without passing in x and y
-    # values, so default values seem necessary.
+    # Used by the circle collision detection. Allows a slightly smaller and
+    # more accurate hit "box".
+    radius = 21
+     
     def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
@@ -29,11 +25,10 @@ class Enemy(pygame.sprite.Sprite):
         # Load the image
         self.image = pygame.image.load("images/enemy.png").convert()
         self.image.set_colorkey(BLACK)
- 
-        # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
         
         if randomize == False:
+            # Make our top-left corner the passed-in location.
             self.rect.topleft = [x, y]
             self.delta_x = dx
             self.delta_y = dy
@@ -47,7 +42,7 @@ class Enemy(pygame.sprite.Sprite):
             # TODO: just realized this could be zero... and it would stay still
             self.delta_x = random.randint(-5, 6)
             self.delta_y = random.randint(-5, 6)
-     
+
     # Change the speed of the enemy
     def changespeed(self, x, y):
         self.delta_x += x

@@ -1,19 +1,8 @@
-* fix weird input bug when screen loses focus
-    + The problem is that the program only adjusts players speed/direction when
-      a button is pressed or released. If you're holding up, the window loses
-      focus, and you release up, the program won't know you've released it and
-      the player will keep moving up. What we need to do is check the STATE of
-      the keys at any given time, and adjust player movement based on that.
-      Should make controls more fluid as well, though it seems less efficient.
-      Alternatively, could just grab the keys...
+* targeting reticule that can grow or shrink... another powerup/down?
 
 * visual indicator of how many enemies you can target, some kind of horizontal
   bar that fills up as you approach your max number of targets, gives you a
   clear sense of when you can fire for maximum score-age
-
-* better collision... tighter hitboxes
-
-* targeting reticule that can grow or shrink... another powerup/down?
 
 * pause
 
@@ -30,3 +19,12 @@
     + this would be good for multiplayer too... each player gets their own side
       of the screen
     + for now just don't let 'em go off-screen
+
+* fix weird input bug when screen loses focus
+    + The problem is that the program only adjusts players speed/direction when
+      a button is pressed or released. If you're holding up, the window loses
+      focus, and you release up, the program won't know you've released it and
+      the player will keep moving up. What we need to do is check the STATE of
+      the keys at any given time, and adjust player movement based on that.
+      Should make controls more fluid as well, though it seems less efficient.
+      Alternatively, could just grab the keys...

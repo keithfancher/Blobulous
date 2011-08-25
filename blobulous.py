@@ -118,26 +118,28 @@ def main():
         if random.randint(0, 99) == 42:
             enemies.add(spawn_powerup())
 
-        # If a player has collided with anything, loses a life!
+        # If a player has collided with anything at all.
         # Note that colliding with a Powerup will also kill the player. He's
         # gotta SHOOT the powerup if he wants it.
         if not PLAYER_INVINCIBLE:
             if pygame.sprite.spritecollideany(player, enemies):
 
-                # This gets a list of enemies/powerups that have collided with
-                # the player. The last argument does the work of calling kill()
-                # on any of those objects. This function is a bit slow, so only
-                # call it when we already KNOW there's been a collision,
-                # instead of every frame.
-                pygame.sprite.spritecollide(player, enemies, True)
-                player.decrease_lives()
-                if player.is_dead():
-                    print "That was your last life! You're dead."
-                    print "Final score: %d" % player.score
-                    print "Shutting everything down..."
-                    sys.exit()
-                else:
-                    print "You lost a life. Remaining: %d" % player.extra_lives
+                # This actually does the work of checking if the player should
+                # die, and destroying any objects they've collided with. This
+                # function is a bit slow, so only call it when we already KNOW
+                # there's been a collision, instead of every frame. Note use of
+                # collide_circle -- a bit slower, but much more accurate for
+                # our purposes.
+                if pygame.sprite.spritecollide(player, enemies, True, 
+                                               pygame.sprite.collide_circle):
+                    player.decrease_lives()
+                    if player.is_dead():
+                        print "That was your last life! You're dead."
+                        print "Final score: %d" % player.score
+                        print "Shutting everything down..."
+                        sys.exit()
+                    else:
+                        print "You lost a life. Remaining: %d" % player.extra_lives
                      
         # Moves the player based on the current speed/direction
         player.update()
@@ -152,11 +154,11 @@ def main():
         enemies.draw(screen)
 
         # Draw the score to the screen
-        # TODO: draw lives
         if pygame.font:
             # Recalculate the rect every time it's drawn, since the number can
-            # continually grow and take up more space. TODO: Really, only need
-            # to recalculate every time the score increases.
+            # continually grow and take up more space.
+            # TODO: Really, only need to recalculate every time the score
+            # increases.
             text = font.render(str(player.score), True, WHITE)
             text_rect = text.get_rect()
             text_rect.bottom = screen.get_rect().bottom - 8
