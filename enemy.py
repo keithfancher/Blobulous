@@ -24,7 +24,7 @@ class Enemy(pygame.sprite.Sprite):
          
         # Load the image
         self.image = pygame.image.load("images/enemy.png").convert()
-        self.image.set_colorkey(BLACK)
+        self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
         
         if randomize == False:

@@ -5,7 +5,7 @@ from settings import *
 
 
 PLAYER_SIZE = 20 # TODO: kill this
-TARGET_LINE_COLOR = RED
+TARGET_LINE_COLOR = pygame.Color('red')
 
 
 class Player(pygame.sprite.Sprite):
@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
          
         # Load the image
         self.image = pygame.image.load("images/player.png").convert()
-        self.image.set_colorkey(BLACK)
+        self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
 

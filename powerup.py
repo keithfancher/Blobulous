@@ -19,7 +19,7 @@ class Powerup(Enemy):
          
         # Load the image
         self.image = pygame.image.load("images/powerup.png").convert()
-        self.image.set_colorkey(BLACK)
+        self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
 
         # This can be pretty much anything larger than the size of the sprite

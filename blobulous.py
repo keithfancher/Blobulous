@@ -148,22 +148,31 @@ def main():
         enemies.update()
          
         # Draws everything
-        screen.fill(BLACK)
+        screen.fill(pygame.Color('black'))
         player.draw_target_lines(screen)
         player_group.draw(screen)
         enemies.draw(screen)
 
-        # Draw the score to the screen
         if pygame.font:
+            # Draw the score to the screen
             # Recalculate the rect every time it's drawn, since the number can
             # continually grow and take up more space.
             # TODO: Really, only need to recalculate every time the score
             # increases.
-            text = font.render(str(player.score), True, WHITE)
+            text = font.render(str(player.score), True, pygame.Color('white'))
             text_rect = text.get_rect()
             text_rect.bottom = screen.get_rect().bottom - 8
             text_rect.right = screen.get_rect().right - 10
             screen.blit(text, text_rect)
+
+            # draw the FPS
+            if SHOW_FPS:
+                fps_text = font.render(str(clock.get_fps()), True, 
+                                       pygame.Color('white'))
+                fps_rect = fps_text.get_rect()
+                fps_rect.bottom = screen.get_rect().bottom - 8
+                fps_rect.left = 10
+                screen.blit(fps_text, fps_rect)
 
         # Flip screen
         pygame.display.flip()
