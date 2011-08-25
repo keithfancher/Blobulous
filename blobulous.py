@@ -7,6 +7,7 @@ import pygame
 from player import Player
 from enemy import Enemy, spawn_enemy
 from powerup import Powerup, spawn_powerup
+from cursor import Cursor
 from settings import *
  
 
@@ -27,6 +28,13 @@ def main():
     player = Player(SCREEN_W / 2, SCREEN_H / 2)
     # Doesn't need its own sprite group yet, but might be useful for multiplayer
     player_group = pygame.sprite.RenderPlain((player))
+
+    # TESTING cursor stuff
+    cursor = Cursor()
+    cursor_group = pygame.sprite.RenderPlain((cursor))
+    # Setting the cursor to invisible seems to alter the mouse sensitivity
+    # quite a bit, which I *don't* want.
+#    pygame.mouse.set_visible(False)
 
     # Spawn NUM_INIT_ENEMIES random enemies
     enemies = pygame.sprite.RenderPlain()
@@ -93,6 +101,9 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_down = True
 
+        # Move the cursor... maybe only do this when we get mouse movement?
+        cursor.rect.center = pygame.mouse.get_pos()
+
         # Have to check if we're over an enemy with the mouse every frame even
         # when there isn't a MOUSEMOTION event, 'cause the player could be
         # holding down the button and an enemy could move under the mouse.
@@ -152,6 +163,7 @@ def main():
         player.draw_target_lines(screen)
         player_group.draw(screen)
         enemies.draw(screen)
+        cursor_group.draw(screen)
 
         if pygame.font:
             # Draw the score to the screen
