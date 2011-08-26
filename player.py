@@ -28,14 +28,24 @@ class Player(pygame.sprite.Sprite):
 
     # This value is used for the circle collision detection
     radius = 10
+
+    # The images used for animating the player
+    images = []
      
     def __init__(self, x, y):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
+
+        # Load images
+        self.images.append(pygame.image.load("images/player_off.png").convert())
+        self.images.append(pygame.image.load("images/player_on.png").convert())
+        self.images[0].set_colorkey(pygame.Color('black'))
+        self.images[1].set_colorkey(pygame.Color('black'))
          
         # Load the image
-        self.image = pygame.image.load("images/player.png").convert()
-        self.image.set_colorkey(pygame.Color('black'))
+#        self.image = pygame.image.load("images/player.png").convert()
+        self.image = self.images[0]
+#        self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
 
@@ -58,6 +68,12 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom >= SCREEN_H:
             self.rect.bottom = SCREEN_H
+
+        # if player is targeting an enemy, make him light up
+        if self.targeted:
+            self.image = self.images[1]
+        else:
+            self.image = self.images[0]
 
     # Add an enemy to the targeted group
     def target_enemy(self, enemy):
