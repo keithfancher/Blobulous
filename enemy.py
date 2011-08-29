@@ -1,6 +1,7 @@
 import random
 import pygame
 
+from explosion import Explosion
 from settings import *
 
 ENEMY_SIZE = 44 # TODO: this is unnecessary, kill it
@@ -20,7 +21,7 @@ class Enemy(pygame.sprite.Sprite):
      
     def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self, self.containers)
          
         # Load the image
         self.image = pygame.image.load("images/enemy.png").convert()
@@ -54,6 +55,15 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.left += self.delta_x
         # If we're more than 60 pixels off the screen, destroy the object
         self.kill_if_offscreen()
+
+    # Override Sprite.kill() so enemies (and their descendent classes) will
+    # explode instead of just disappearing
+    def kill(self):
+        # This is automatically added to the proper sprite group thanks to the
+        # magic of Self.containers
+        # TODO: only kill if not off-screen? Guess that doesn't really matter.
+        Explosion(self.rect.center)
+        pygame.sprite.Sprite.kill(self)
 
     # Kill any enemies that go more than 60 pixels off the screen
     def kill_if_offscreen(self):

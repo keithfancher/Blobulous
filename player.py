@@ -10,31 +10,22 @@ TARGET_LINE_COLOR = pygame.Color('red')
 
 class Player(pygame.sprite.Sprite):
  
-    # Set speed vector
-    change_x = 0
-    change_y = 0
+    # Speed vector
+    delta_x = 0
+    delta_y = 0
 
     # All the enemies/powerups the player is targeting
     targeted = pygame.sprite.Group()
 
-    # Max targets can have at once... this will increase w/ powerups
-    max_targets = 2
-
-    # Beginning number of extra lives
-    extra_lives = 3
-
-    # Score!
+    max_targets = 2 # Max targets... increase w/ powerups
+    extra_lives = 3 # Starting number
     score = 0
-
-    # This value is used for the circle collision detection
-    radius = 10
-
-    # The images used for animating the player
-    images = []
+    radius = 10 # Used for circular collision detection
+    images = [] # Images used for animation
      
     def __init__(self, x, y):
         # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self, self.containers)
 
         # Load images
         self.images.append(pygame.image.load("images/player_off.png").convert())
@@ -42,22 +33,19 @@ class Player(pygame.sprite.Sprite):
         self.images[0].set_colorkey(pygame.Color('black'))
         self.images[1].set_colorkey(pygame.Color('black'))
          
-        # Load the image
-#        self.image = pygame.image.load("images/player.png").convert()
         self.image = self.images[0]
-#        self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
 
     # Change the speed of the player
     def changespeed(self, x, y):
-        self.change_x += x
-        self.change_y += y
+        self.delta_x += x
+        self.delta_y += y
          
     # Find a new position for the player
     def update(self):
-        self.rect.top += self.change_y
-        self.rect.left += self.change_x
+        self.rect.top += self.delta_y
+        self.rect.left += self.delta_x
         
         # For now, don't let player off-screen. Might change this up later.
         if self.rect.left <= 0:
@@ -100,9 +88,10 @@ class Player(pygame.sprite.Sprite):
             # Is this the best way to check for Powerup vs. Enemy?
             if isinstance(target, Powerup):
                 self.power_up()
-            # Eventually some score code should probably go here
             else:
+                # Eventually some score code should probably go here
                 pass
+
             target.kill()
         
     # Draw the lines from self to targets

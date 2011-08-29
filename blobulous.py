@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 import sys
 import random
 import pygame
@@ -8,6 +9,7 @@ from player import Player
 from enemy import Enemy, spawn_enemy
 from powerup import Powerup, spawn_powerup
 from cursor import Cursor
+from explosion import Explosion
 from settings import *
  
 
@@ -18,26 +20,36 @@ def main():
     pygame.display.set_caption('Blobulous')
     clock = pygame.time.Clock()
 
-    # Testing font stuff
+    # Font isn't included with every pygame distribution...
     if pygame.font:
         font = pygame.font.Font(None, 30)
     else:
         print "Warning: fonts disabled. Install pygame.font!"
+
+    # Initialize sprite groups
+    players = pygame.sprite.Group() # might be good for multiplayer?
+    enemies = pygame.sprite.Group()
+    explosions = pygame.sprite.Group()
+    cursors = pygame.sprite.Group()
+    all_sprites = pygame.sprite.RenderPlain()
+
+    # Assign default groups to each sprite class
+    Player.containers = all_sprites, players
+    Enemy.containers = all_sprites, enemies
+    Powerup.containers = all_sprites, enemies # TODO: give their own group?
+    Explosion.containers = all_sprites, explosions
+    Cursor.containers = all_sprites, cursors
      
     # Create the player object
     player = Player(SCREEN_W / 2, SCREEN_H / 2)
-    # Doesn't need its own sprite group yet, but might be useful for multiplayer
-    player_group = pygame.sprite.RenderPlain((player))
 
     # TESTING cursor stuff
     cursor = Cursor()
-    cursor_group = pygame.sprite.RenderPlain((cursor))
     # Setting the cursor to invisible seems to alter the mouse sensitivity
     # quite a bit, which I *don't* want.
 #    pygame.mouse.set_visible(False)
 
     # Spawn NUM_INIT_ENEMIES random enemies
-    enemies = pygame.sprite.RenderPlain()
     for i in range(0, NUM_INIT_ENEMIES):
         enemies.add(spawn_enemy())
 
@@ -120,13 +132,13 @@ def main():
         # make this based on timing, the level, the score, etc.
         #
         # Is there a better way to check for 1/10? This works, I guess...
-        if random.randint(0, 9) == 5:
+        if random.randint(0, 10) == 5:
             enemies.add(spawn_enemy())
             # Testing if enemies are actually destroyed once they're off-screen
             #print "Total enemies: %d" % len(enemies)
 
         # And a 1/100 chance a new powerup will spawn...
-        if random.randint(0, 99) == 42:
+        if random.randint(0, 100) == 42:
             enemies.add(spawn_powerup())
 
         # If a player has collided with anything at all.
@@ -152,18 +164,11 @@ def main():
                     else:
                         print "You lost a life. Remaining: %d" % player.extra_lives
                      
-        # Moves the player based on the current speed/direction
-        player.update()
-
-        # Calls the update() function on every Sprite in the group, magically!
-        enemies.update()
-         
-        # Draws everything
+        # Update and draw all sprite groups
+        all_sprites.update()
         screen.fill(pygame.Color('black'))
         player.draw_target_lines(screen)
-        player_group.draw(screen)
-        enemies.draw(screen)
-        cursor_group.draw(screen)
+        all_sprites.draw(screen) # any way to control order of drawing?
 
         if pygame.font:
             # Draw the score to the screen
@@ -177,7 +182,7 @@ def main():
             text_rect.right = screen.get_rect().right - 10
             screen.blit(text, text_rect)
 
-            # draw the FPS
+            # Draw the FPS
             if SHOW_FPS:
                 fps_text = font.render(str(clock.get_fps()), True, 
                                        pygame.Color('white'))

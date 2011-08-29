@@ -6,7 +6,7 @@ class Cursor(pygame.sprite.Sprite):
 
     def __init__(self, x=0, y=0):
         # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self, self.containers)
          
         # Load the image
         self.image = pygame.image.load("images/cursor.png").convert()
