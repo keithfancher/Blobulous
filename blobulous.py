@@ -11,20 +11,28 @@ from powerup import Powerup
 from cursor import Cursor
 from explosion import Explosion
 from settings import *
+
+
+# Write text to a given surface using pygame.font, or fails with a warning if
+# pygame.font isn't available.
+def print_text(screen, text, size, color, **kwargs):
+    if not pygame.font:
+        print "Warning: fonts disabled. Install pygame.font!"
+    else:
+        font = pygame.font.Font(None, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect(**kwargs)
+        screen.blit(text_surface, text_rect)
  
 
+# My main() man
 def main():
+
     # PyGame init stuff
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_W, SCREEN_H])
     pygame.display.set_caption('Blobulous')
     clock = pygame.time.Clock()
-
-    # Font isn't included with every pygame distribution...
-    if pygame.font:
-        font = pygame.font.Font(None, 30)
-    else:
-        print "Warning: fonts disabled. Install pygame.font!"
 
     # Initialize sprite groups
     players = pygame.sprite.Group() # might be good for multiplayer?
@@ -36,14 +44,14 @@ def main():
     # Assign default groups to each sprite class
     Player.containers = all_sprites, players
     Enemy.containers = all_sprites, enemies
-    Powerup.containers = all_sprites, enemies # TODO: give their own group?
+    Powerup.containers = all_sprites, enemies # give their own group?
     Explosion.containers = all_sprites, explosions
     Cursor.containers = all_sprites, cursors
      
     # Create the player object
     player = Player(SCREEN_W / 2, SCREEN_H / 2)
 
-    # TESTING cursor stuff
+    # Create the mouse cursor
     cursor = Cursor()
     # Setting the cursor to invisible seems to alter the mouse sensitivity
     # quite a bit, which I *don't* want.
@@ -66,6 +74,8 @@ def main():
     # Grab input. Makes it easier to not lose focus when clicking around like a
     # madman in windowed mode. Also solves an input bug.
     pygame.event.set_grab(True)
+
+    game_paused = False
      
     # Main event loop
     while True:
@@ -86,9 +96,19 @@ def main():
                     player.changespeed(0,-3)
                 if event.key == pygame.K_DOWN:
                     player.changespeed(0,3)
+
                 if event.key == pygame.K_ESCAPE:
-                    print "Shutting everything down..."
-                    sys.exit()
+                    if game_paused:
+                        print "Shutting everything down..."
+                        sys.exit()
+                    else:
+                        game_paused = True
+                        pygame.event.set_grab(False) # ungrab when paused
+                # When the game is paused, any non-ESC key will unpause
+                else:
+                    if game_paused:
+                        game_paused = False
+                        pygame.event.set_grab(True)
                      
             # Reset speed when key goes up      
             if event.type == pygame.KEYUP:
@@ -130,15 +150,11 @@ def main():
 
         # For now, there's a 1/10 chance a new enemy will spawn. Later I'll
         # make this based on timing, the level, the score, etc.
-        #
-        # Is there a better way to check for 1/10? This works, I guess...
-        if random.randint(0, 10) == 5:
+        if random.randint(1, 10) == 5 and not game_paused:
             enemies.add(Enemy(randomize=True))
-            # Testing if enemies are actually destroyed once they're off-screen
-            #print "Total enemies: %d" % len(enemies)
 
-        # And a 1/150 chance a new powerup will spawn...
-        if random.randint(0, 150) == 42:
+        # And a 1/175 chance a new powerup will spawn...
+        if random.randint(1, 175) == 42 and not game_paused:
             enemies.add(Powerup(randomize=True))
 
         # If a player has collided with anything at all.
@@ -165,31 +181,29 @@ def main():
                         print "You lost a life. Remaining: %d" % player.extra_lives
                      
         # Update and draw all sprite groups
-        all_sprites.update()
         screen.fill(pygame.Color('black'))
-        player.draw_target_lines(screen)
-        all_sprites.draw(screen) # any way to control order of drawing?
+        if not game_paused:
+            all_sprites.update()
+            player.draw_target_lines(screen)
+            all_sprites.draw(screen) # any way to control order of drawing?
+        else:
+            print_text(screen, "PAUSED", 50, pygame.Color('red'), 
+                       midbottom=screen.get_rect().center)
+            print_text(screen, "ESC to exit, any other key to resume", 25,
+                       pygame.Color('darkgray'), 
+                       centerx=screen.get_rect().centerx,
+                       centery=screen.get_rect().centery + 20)
 
-        if pygame.font:
-            # Draw the score to the screen
-            # Recalculate the rect every time it's drawn, since the number can
-            # continually grow and take up more space.
-            # TODO: Really, only need to recalculate every time the score
-            # increases.
-            text = font.render(str(player.score), True, pygame.Color('white'))
-            text_rect = text.get_rect()
-            text_rect.bottom = screen.get_rect().bottom - 8
-            text_rect.right = screen.get_rect().right - 10
-            screen.blit(text, text_rect)
+        # Draw the score
+        print_text(screen, str(player.score), 30, pygame.Color('white'),
+                   bottom=screen.get_rect().bottom - 8,
+                   right=screen.get_rect().right - 10)
 
-            # Draw the FPS
-            if SHOW_FPS:
-                fps_text = font.render(str(clock.get_fps()), True, 
-                                       pygame.Color('white'))
-                fps_rect = fps_text.get_rect()
-                fps_rect.bottom = screen.get_rect().bottom - 8
-                fps_rect.left = 10
-                screen.blit(fps_text, fps_rect)
+        # Draw the FPS
+        if SHOW_FPS:
+            print_text(screen, "%.2f" % clock.get_fps(), 30, 
+                       pygame.Color('white'),
+                       bottom=screen.get_rect().bottom - 8, left=10)
 
         # Flip screen
         pygame.display.flip()
