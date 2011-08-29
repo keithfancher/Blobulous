@@ -1,10 +1,7 @@
+* max number of powerups. once that's been reached, each powerup gives you a
+  badass score boost
+
 * targeting reticule that can grow or shrink... another powerup/down?
-
-* visual indicator of how many enemies you can target, some kind of horizontal
-  bar that fills up as you approach your max number of targets, gives you a
-  clear sense of when you can fire for maximum score-age
-
-* pause!
 
 * intro screen with instructions
 

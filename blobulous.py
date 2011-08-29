@@ -23,6 +23,36 @@ def print_text(screen, text, size, color, **kwargs):
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(**kwargs)
         screen.blit(text_surface, text_rect)
+
+
+# Draw a nifty target meter!
+def draw_target_meter(screen, targets, max_targets):
+    meter_w = 200
+    meter_h = 10
+
+    surface = pygame.Surface((meter_w, meter_h))
+    surface.fill(pygame.Color('yellow'))
+    surface_rect = surface.get_rect(centerx=screen.get_rect().centerx,
+                                    centery=screen.get_rect().bottom - 20)
+    # inner!
+    inner_w = (targets * meter_w) / max_targets
+    inner_h = meter_h
+    inner_surface = pygame.Surface((inner_w, inner_h))
+    inner_surface.fill(pygame.Color('red'))
+    inner_rect = inner_surface.get_rect(topleft=surface_rect.topleft)
+    
+    # bliznit
+    screen.blit(surface, surface_rect)
+    screen.blit(inner_surface, inner_rect)
+
+    # draw dividing lines
+    segment_width = meter_w / max_targets
+    line_x_pos = 0
+    for i in xrange(max_targets - 1):
+        line_x_pos += segment_width
+        pygame.draw.line(screen, pygame.Color('black'),
+                         (surface_rect.left + line_x_pos, surface_rect.top),
+                         (surface_rect.left + line_x_pos, surface_rect.bottom))
  
 
 # My main() man
@@ -104,6 +134,9 @@ def main():
                     else:
                         game_paused = True
                         pygame.event.set_grab(False) # ungrab when paused
+                        player.untarget_all() # untarget all when paused
+                        mouse_down = False # even if the mouse is actually down
+
                 # When the game is paused, any non-ESC key will unpause
                 else:
                     if game_paused:
@@ -127,10 +160,10 @@ def main():
 
             # When the mouse button is released, kill any targeted enemies
             # TODO: only left button
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONUP and not game_paused:
                 mouse_down = False
                 player.kill_targeted()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not game_paused:
                 mouse_down = True
 
         # Move the cursor... maybe only do this when we get mouse movement?
@@ -204,6 +237,9 @@ def main():
             print_text(screen, "%.2f" % clock.get_fps(), 30, 
                        pygame.Color('white'),
                        bottom=screen.get_rect().bottom - 8, left=10)
+
+        # Draw the target meter
+        draw_target_meter(screen, len(player.targeted), player.max_targets)
 
         # Flip screen
         pygame.display.flip()
