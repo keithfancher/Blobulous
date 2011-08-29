@@ -4,10 +4,6 @@ from powerup import Powerup
 from settings import *
 
 
-PLAYER_SIZE = 20 # TODO: kill this
-TARGET_LINE_COLOR = pygame.Color('red')
-
-
 class Player(pygame.sprite.Sprite):
  
     # Speed vector
@@ -99,8 +95,8 @@ class Player(pygame.sprite.Sprite):
         # if there are sprites in the targeted group
         if(self.targeted):
             for target in self.targeted:
-                pygame.draw.aaline(surface, TARGET_LINE_COLOR,
-                    self.rect.center, target.rect.center)
+                pygame.draw.aaline(surface, pygame.Color('red'),
+                                   self.rect.center, target.rect.center)
 
     def power_up(self):
         self.max_targets += 1

@@ -6,8 +6,8 @@ import random
 import pygame
 
 from player import Player
-from enemy import Enemy, spawn_enemy
-from powerup import Powerup, spawn_powerup
+from enemy import Enemy
+from powerup import Powerup
 from cursor import Cursor
 from explosion import Explosion
 from settings import *
@@ -50,14 +50,14 @@ def main():
 #    pygame.mouse.set_visible(False)
 
     # Spawn NUM_INIT_ENEMIES random enemies
-    for i in range(0, NUM_INIT_ENEMIES):
-        enemies.add(spawn_enemy())
+    for i in xrange(NUM_INIT_ENEMIES):
+        enemies.add(Enemy(randomize=True))
 
     # Spawn NUM_INIT_POWERUPS random powerups
     # These just live in the "enemies" group, makes things easier... they're
     # all Sprite objects anyway, and they're basically just benign enemies.
-    for i in range(0, NUM_INIT_POWERUPS):
-        enemies.add(spawn_powerup())
+    for i in xrange(NUM_INIT_POWERUPS):
+        enemies.add(Powerup(randomize=True))
 
     # Mouse state... need to know if the button is held down or not, not just
     # when it's pressed or released. Maybe PyGame has a better way to do this?
@@ -69,7 +69,7 @@ def main():
      
     # Main event loop
     while True:
-         
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 print "Shutting everything down..."
@@ -106,10 +106,10 @@ def main():
                 pass
 
             # When the mouse button is released, kill any targeted enemies
+            # TODO: only left button
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_down = False
                 player.kill_targeted()
-
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_down = True
 
@@ -133,13 +133,13 @@ def main():
         #
         # Is there a better way to check for 1/10? This works, I guess...
         if random.randint(0, 10) == 5:
-            enemies.add(spawn_enemy())
+            enemies.add(Enemy(randomize=True))
             # Testing if enemies are actually destroyed once they're off-screen
             #print "Total enemies: %d" % len(enemies)
 
-        # And a 1/100 chance a new powerup will spawn...
-        if random.randint(0, 100) == 42:
-            enemies.add(spawn_powerup())
+        # And a 1/150 chance a new powerup will spawn...
+        if random.randint(0, 150) == 42:
+            enemies.add(Powerup(randomize=True))
 
         # If a player has collided with anything at all.
         # Note that colliding with a Powerup will also kill the player. He's

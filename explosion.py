@@ -1,7 +1,5 @@
-import random
 import pygame
 
-from settings import *
 
 class Explosion(pygame.sprite.Sprite):
 
