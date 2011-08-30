@@ -60,8 +60,8 @@ def main():
 
     # PyGame init stuff
     pygame.init()
-    screen = pygame.display.set_mode([SCREEN_W, SCREEN_H])
     pygame.display.set_caption('Blobulous')
+    screen = pygame.display.set_mode([SCREEN_W, SCREEN_H])
     clock = pygame.time.Clock()
 
     # Initialize sprite groups

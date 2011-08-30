@@ -15,5 +15,5 @@ CONTROLS:
 ---------
 Arrow keys -- move player
 Mouse -- move cursor
-Left mouse button -- hold to target enemies
+Left mouse button -- hold to target enemies, release to fire
 Esc -- pause game, Esc again to exit
