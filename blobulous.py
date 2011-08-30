@@ -159,12 +159,14 @@ def main():
                 pass
 
             # When the mouse button is released, kill any targeted enemies
-            # TODO: only left button
-            if event.type == pygame.MOUSEBUTTONUP and not game_paused:
-                mouse_down = False
-                player.kill_targeted()
-            if event.type == pygame.MOUSEBUTTONDOWN and not game_paused:
-                mouse_down = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                # 1 = left mouse button
+                if event.button == 1 and not game_paused:
+                    mouse_down = False
+                    player.kill_targeted()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and not game_paused:
+                    mouse_down = True
 
         # Move the cursor... maybe only do this when we get mouse movement?
         cursor.rect.center = pygame.mouse.get_pos()
