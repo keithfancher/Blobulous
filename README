@@ -2,12 +2,18 @@
 BLOBULOUS
 =========
 
-I'm thinking this'll be like Rez meets Asteroids. Static play area, enemies and
-powerups streaming in from outside. Hold down mouse button and drag across
-enemies/powerups to target, release to fire.  Each powerup lets you target more
-enemies simultaneously. The more you kill at once, the bigger the score
-multiplier. Haven't decided if there'll be levels, or it'll just go on forever.
-Each time you get hit, you lose a life and your max number of targetable
-enemies/powerups gets reset. Lose all your lives, you're dead!
+Sort of like Rez (http://en.wikipedia.org/wiki/Rez) meets Asteroids?
 
-Anyway, this is just a prototype, it doesn't do much yet.
+Hold the down mouse button and drag across enemies/powerups to target, release
+to fire.  Each powerup lets you target more enemies simultaneously.  The more
+you kill at once, the bigger the score multiplier.  Each time you get hit, you
+lose a life and your max number of targetable enemies/powerups gets reset.
+Lose all your lives and you're dead!
+
+
+CONTROLS:
+---------
+Arrow keys -- move player
+Mouse -- move cursor
+Left mouse button -- hold to target enemies
+Esc -- pause game, Esc again to exit

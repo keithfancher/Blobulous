@@ -204,14 +204,13 @@ def main():
                 # our purposes.
                 if pygame.sprite.spritecollide(player, enemies, True, 
                                                pygame.sprite.collide_circle):
+                    player.untarget_all()
                     player.decrease_lives()
                     if player.is_dead():
                         print "That was your last life! You're dead."
                         print "Final score: %d" % player.score
                         print "Shutting everything down..."
                         sys.exit()
-                    else:
-                        print "You lost a life. Remaining: %d" % player.extra_lives
                      
         # Update and draw all sprite groups
         screen.fill(pygame.Color('black'))
@@ -240,6 +239,14 @@ def main():
 
         # Draw the target meter
         draw_target_meter(screen, len(player.targeted), player.max_targets)
+
+        # Draw num lives
+        dest_rect = player.images[0].get_rect(right=screen.get_rect().right-33, 
+                                             bottom=screen.get_rect().bottom-40)
+        screen.blit(player.images[0], dest_rect)
+        print_text(screen, "x %d" % player.extra_lives, 20,
+                   pygame.Color('white'), right=screen.get_rect().right - 10,
+                   bottom=screen.get_rect().bottom - 40)
 
         # Flip screen
         pygame.display.flip()
