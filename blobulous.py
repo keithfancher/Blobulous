@@ -154,9 +154,9 @@ def main():
                 if event.key == pygame.K_DOWN:
                     player.changespeed(0,-3)
 
-            # Might do something with this later, but not now...
+            # Update the cursor position
             if event.type == pygame.MOUSEMOTION:
-                pass
+                cursor.rect.center = event.pos
 
             # When the mouse button is released, kill any targeted enemies
             if event.type == pygame.MOUSEBUTTONUP:
@@ -169,7 +169,7 @@ def main():
                     mouse_down = True
 
         # Move the cursor... maybe only do this when we get mouse movement?
-        cursor.rect.center = pygame.mouse.get_pos()
+#        cursor.rect.center = pygame.mouse.get_pos()
 
         # Have to check if we're over an enemy with the mouse every frame even
         # when there isn't a MOUSEMOTION event, 'cause the player could be
