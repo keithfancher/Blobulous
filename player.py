@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
     max_targets = 2 # Max targets... increase w/ powerups
     extra_lives = 3 # Starting number
     score = 0
+    apeshit_mode = False # Super powered up!!!
     radius = 10 # Used for circular collision detection
     images = [] # Images used for animation
      
@@ -79,7 +80,11 @@ class Player(pygame.sprite.Sprite):
     def kill_targeted(self):
         # 100 points for every enemy killed, then an additional multiplier for
         # killing mutliple enemies in one go.
-        self.score += 100 * len(self.targeted) * len(self.targeted)
+        if self.apeshit_mode:
+            # for now apeshit mode just doubles the score you'd get
+            self.score += 100 * len(self.targeted) * len(self.targeted) * 2
+        else:
+            self.score += 100 * len(self.targeted) * len(self.targeted)
         for target in self.targeted:
             # Is this the best way to check for Powerup vs. Enemy?
             if isinstance(target, Powerup):
@@ -99,8 +104,13 @@ class Player(pygame.sprite.Sprite):
                                    self.rect.center, target.rect.center)
 
     def power_up(self):
-        self.max_targets += 1
-        print "Powered up! Targets: %d" % self.max_targets
+        if self.max_targets < 10:
+            self.max_targets += 1
+            print "Powered up! Targets: %d" % self.max_targets
+        else:
+            # enter APESHIT MODE!!!
+            self.apeshit_mode = True
+            print "APESHIT MODE! SUPER SCORE BONUSES!"
 
     def power_down(self):
         # can never target fewer than ONE enemy/powerup
@@ -111,6 +121,7 @@ class Player(pygame.sprite.Sprite):
     def decrease_lives(self):
         self.extra_lives -= 1
         self.max_targets = 2
+        self.apeshit_mode = False # no more apeshit
 
     def is_dead(self):
         return self.extra_lives < 0

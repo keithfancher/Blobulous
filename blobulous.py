@@ -26,19 +26,27 @@ def print_text(screen, text, size, color, **kwargs):
 
 
 # Draw a nifty target meter!
-def draw_target_meter(screen, targets, max_targets):
+def draw_target_meter(screen, targets, max_targets, apeshit=False):
     meter_w = 200
     meter_h = 10
 
+    # change meter colors if player in apeshit mode
+    if apeshit:
+        base_color = (78, 197, 219) # light blue
+        bar_color = (255, 0, 255) # bright-ass pink-ish
+    else:
+        base_color = pygame.Color('yellow')
+        bar_color = pygame.Color('red')
+
     surface = pygame.Surface((meter_w, meter_h))
-    surface.fill(pygame.Color('yellow'))
+    surface.fill(base_color)
     surface_rect = surface.get_rect(centerx=screen.get_rect().centerx,
                                     centery=screen.get_rect().bottom - 20)
     # inner!
     inner_w = (targets * meter_w) / max_targets
     inner_h = meter_h
     inner_surface = pygame.Surface((inner_w, inner_h))
-    inner_surface.fill(pygame.Color('red'))
+    inner_surface.fill(bar_color)
     inner_rect = inner_surface.get_rect(topleft=surface_rect.topleft)
     
     # bliznit
@@ -240,7 +248,8 @@ def main():
                        bottom=screen.get_rect().bottom - 8, left=10)
 
         # Draw the target meter
-        draw_target_meter(screen, len(player.targeted), player.max_targets)
+        draw_target_meter(screen, len(player.targeted), player.max_targets,
+                          player.apeshit_mode)
 
         # Draw num lives
         dest_rect = player.images[0].get_rect(right=screen.get_rect().right-33, 

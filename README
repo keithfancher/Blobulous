@@ -10,6 +10,11 @@ you kill at once, the bigger the score multiplier.  Each time you get hit, you
 lose a life and your max number of targetable enemies/powerups gets reset.
 Lose all your lives and you're dead!
 
+Note: the max number of enemies you can target at once is 10.  Once you've
+reached that and you collect another powerup, you enter APESHIT MODE.  You'll
+get double points for all your kills until you lose a life.  (Apeshit mode is
+indicated by a superfly new color scheme for your target meter.)
+
 
 CONTROLS:
 ---------
