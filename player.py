@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
     targeted = pygame.sprite.Group()
 
     max_targets = 2 # Max targets... increase w/ powerups
-    extra_lives = 3 # Starting number
+    extra_lives = 2 # Starting number
     score = 0
     apeshit_mode = False # Super powered up!!!
     radius = 10 # Used for circular collision detection
