@@ -1,8 +1,8 @@
 import random
 import pygame
 
+import settings as s
 from explosion import Explosion
-from settings import *
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -51,9 +51,9 @@ class Enemy(pygame.sprite.Sprite):
 
     # Kill any enemies that go more than 60 pixels off the screen
     def kill_if_offscreen(self):
-        if self.rect.left < -60 or self.rect.left > SCREEN_W + 60:
+        if self.rect.left < -60 or self.rect.left > s.SCREEN_W + 60:
             self.kill()
-        elif self.rect.top < -60 or self.rect.top > SCREEN_H + 60:
+        elif self.rect.top < -60 or self.rect.top > s.SCREEN_H + 60:
             self.kill()
 
     # Spawns somewhere off the screen with random direction and speed
@@ -69,25 +69,25 @@ class Enemy(pygame.sprite.Sprite):
         spawn_location = random.randint(0, 3)
 
         if spawn_location == TOP:
-            self.rect.left = random.randint(0, SCREEN_W - self.rect.width)
+            self.rect.left = random.randint(0, s.SCREEN_W - self.rect.width)
             self.rect.bottom = 0
             self.delta_x = random.randint(-5, 5)
             self.delta_y = random.randint(1, 5) # gotta move down
 
         elif spawn_location == BOTTOM:
-            self.rect.left = random.randint(0, SCREEN_W - self.rect.width)
-            self.rect.top = SCREEN_H
+            self.rect.left = random.randint(0, s.SCREEN_W - self.rect.width)
+            self.rect.top = s.SCREEN_H
             self.delta_x = random.randint(-5, 5)
             self.delta_y = random.randint(-5, 0) # gotta move up
 
         elif spawn_location == LEFT:
             self.rect.right = 0
-            self.rect.top = random.randint(0, SCREEN_H - self.rect.height)
+            self.rect.top = random.randint(0, s.SCREEN_H - self.rect.height)
             self.delta_x = random.randint(1, 5) # gotta move right
             self.delta_y = random.randint(-5, 5)
 
         elif spawn_location == RIGHT:
-            self.rect.left = SCREEN_W
-            self.rect.top = random.randint(0, SCREEN_H - self.rect.height)
+            self.rect.left = s.SCREEN_W
+            self.rect.top = random.randint(0, s.SCREEN_H - self.rect.height)
             self.delta_x = random.randint(-5, 0) # gotta move left
             self.delta_y = random.randint(-5, 5)

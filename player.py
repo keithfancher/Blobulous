@@ -1,7 +1,7 @@
 import pygame
 
+import settings as s
 from powerup import Powerup
-from settings import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -47,12 +47,12 @@ class Player(pygame.sprite.Sprite):
         # For now, don't let player off-screen. Might change this up later.
         if self.rect.left <= 0:
             self.rect.left = 0
-        if self.rect.right >= SCREEN_W:
-            self.rect.right = SCREEN_W
+        if self.rect.right >= s.SCREEN_W:
+            self.rect.right = s.SCREEN_W
         if self.rect.top <= 0:
             self.rect.top = 0
-        if self.rect.bottom >= SCREEN_H:
-            self.rect.bottom = SCREEN_H
+        if self.rect.bottom >= s.SCREEN_H:
+            self.rect.bottom = s.SCREEN_H
 
         # if player is targeting an enemy, make him light up
         if self.targeted:

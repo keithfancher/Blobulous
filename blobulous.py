@@ -5,12 +5,12 @@ import sys
 import random
 import pygame
 
+import settings as s
 from player import Player
 from enemy import Enemy
 from powerup import Powerup
 from cursor import Cursor
 from explosion import Explosion
-from settings import *
 
 
 # Write text to a given surface using pygame.font, or fails with a warning if
@@ -69,7 +69,7 @@ def main():
     # PyGame init stuff
     pygame.init()
     pygame.display.set_caption('Blobulous')
-    screen = pygame.display.set_mode([SCREEN_W, SCREEN_H])
+    screen = pygame.display.set_mode([s.SCREEN_W, s.SCREEN_H])
     clock = pygame.time.Clock()
 
     # Initialize sprite groups
@@ -87,7 +87,7 @@ def main():
     Cursor.containers = all_sprites, cursors
      
     # Create the player object
-    player = Player(SCREEN_W / 2, SCREEN_H / 2)
+    player = Player(s.SCREEN_W / 2, s.SCREEN_H / 2)
 
     # Create the mouse cursor
     cursor = Cursor()
@@ -96,13 +96,13 @@ def main():
 #    pygame.mouse.set_visible(False)
 
     # Spawn NUM_INIT_ENEMIES random enemies
-    for i in xrange(NUM_INIT_ENEMIES):
+    for i in xrange(s.NUM_INIT_ENEMIES):
         enemies.add(Enemy(randomize=True))
 
     # Spawn NUM_INIT_POWERUPS random powerups
     # These just live in the "enemies" group, makes things easier... they're
     # all Sprite objects anyway, and they're basically just benign enemies.
-    for i in xrange(NUM_INIT_POWERUPS):
+    for i in xrange(s.NUM_INIT_POWERUPS):
         enemies.add(Powerup(randomize=True))
 
     # Mouse state... need to know if the button is held down or not, not just
@@ -136,7 +136,7 @@ def main():
                     player.changespeed(0,3)
 
                 if event.key == pygame.K_ESCAPE:
-                    if game_paused:
+                    if game_paused or player.is_dead():
                         print "Shutting everything down..."
                         sys.exit()
                     else:
@@ -169,11 +169,11 @@ def main():
             # When the mouse button is released, kill any targeted enemies
             if event.type == pygame.MOUSEBUTTONUP:
                 # 1 = left mouse button
-                if event.button == 1 and not game_paused:
+                if event.button == 1 and not (game_paused or player.is_dead()):
                     mouse_down = False
                     player.kill_targeted()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and not game_paused:
+                if event.button == 1 and not (game_paused or player.is_dead()):
                     mouse_down = True
 
         # Move the cursor... maybe only do this when we get mouse movement?
@@ -203,7 +203,7 @@ def main():
         # If a player has collided with anything at all.
         # Note that colliding with a Powerup will also kill the player. He's
         # gotta SHOOT the powerup if he wants it.
-        if not PLAYER_INVINCIBLE:
+        if not s.PLAYER_INVINCIBLE:
             if pygame.sprite.spritecollideany(player, enemies):
 
                 # This actually does the work of checking if the player should
@@ -217,24 +217,31 @@ def main():
                     player.untarget_all()
                     player.decrease_lives()
                     if player.is_dead():
+                        pygame.event.set_grab(False)
+                        mouse_down = False
                         print "That was your last life! You're dead."
                         print "Final score: %d" % player.score
-                        print "Shutting everything down..."
-                        sys.exit()
                      
         # Update and draw all sprite groups
         screen.fill(pygame.Color('black'))
-        if not game_paused:
-            all_sprites.update()
-            player.draw_target_lines(screen)
-            all_sprites.draw(screen) # any way to control order of drawing?
-        else:
+        if game_paused:
             print_text(screen, "PAUSED", 50, pygame.Color('red'), 
                        midbottom=screen.get_rect().center)
             print_text(screen, "ESC to exit, any other key to resume", 25,
                        pygame.Color('darkgray'), 
                        centerx=screen.get_rect().centerx,
                        centery=screen.get_rect().centery + 20)
+        elif player.is_dead():
+            print_text(screen, "YOU PIED.", 50, pygame.Color('red'),
+                       midbottom=screen.get_rect().center)
+            print_text(screen, "ESC to exit", 25,
+                       pygame.Color('darkgray'), 
+                       centerx=screen.get_rect().centerx,
+                       centery=screen.get_rect().centery + 20)
+        else:
+            all_sprites.update()
+            player.draw_target_lines(screen)
+            all_sprites.draw(screen) # any way to control order of drawing?
 
         # Draw the score
         print_text(screen, str(player.score), 30, pygame.Color('white'),
@@ -242,7 +249,7 @@ def main():
                    right=screen.get_rect().right - 10)
 
         # Draw the FPS
-        if SHOW_FPS:
+        if s.SHOW_FPS:
             print_text(screen, "%.2f" % clock.get_fps(), 30, 
                        pygame.Color('white'),
                        bottom=screen.get_rect().bottom - 8, left=10)
@@ -255,15 +262,20 @@ def main():
         dest_rect = player.images[0].get_rect(right=screen.get_rect().right-33, 
                                              bottom=screen.get_rect().bottom-40)
         screen.blit(player.images[0], dest_rect)
-        print_text(screen, "x %d" % player.extra_lives, 20,
-                   pygame.Color('white'), right=screen.get_rect().right - 10,
-                   bottom=screen.get_rect().bottom - 40)
+        if not player.is_dead():
+            print_text(screen, "x %d" % player.extra_lives, 20,
+                       pygame.Color('white'), right=screen.get_rect().right-10,
+                       bottom=screen.get_rect().bottom - 40)
+        else:
+            print_text(screen, "x 0", 20, pygame.Color('red'), 
+                       right=screen.get_rect().right-10,
+                       bottom=screen.get_rect().bottom - 40)
 
         # Flip screen
         pygame.display.flip()
          
         # Pause
-        clock.tick(FPS)
+        clock.tick(s.FPS)
 
 
 if __name__ == "__main__":
