@@ -5,7 +5,7 @@ from powerup import Powerup
 
 
 class Player(pygame.sprite.Sprite):
- 
+
     # Speed vector
     delta_x = 0
     delta_y = 0
@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
     apeshit_mode = False # Super powered up!!!
     radius = 10 # Used for circular collision detection
     images = [] # Images used for animation
-     
+
     def __init__(self, x, y):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, self.containers)
@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.images.append(pygame.image.load("images/player_on.png").convert())
         self.images[0].set_colorkey(pygame.Color('black'))
         self.images[1].set_colorkey(pygame.Color('black'))
-         
+
         self.image = self.images[0]
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
@@ -38,12 +38,12 @@ class Player(pygame.sprite.Sprite):
     def changespeed(self, x, y):
         self.delta_x += x
         self.delta_y += y
-         
+
     # Find a new position for the player
     def update(self):
         self.rect.top += self.delta_y
         self.rect.left += self.delta_x
-        
+
         # For now, don't let player off-screen. Might change this up later.
         if self.rect.left <= 0:
             self.rect.left = 0
@@ -72,7 +72,7 @@ class Player(pygame.sprite.Sprite):
         self.targeted.remove(enemy)
         enemy.targeted = False
 
-    # Remove all enemies from the targted group 
+    # Remove all enemies from the targted group
     def untarget_all(self):
         self.targeted.empty()
 
@@ -94,7 +94,7 @@ class Player(pygame.sprite.Sprite):
                 pass
 
             target.kill()
-        
+
     # Draw the lines from self to targets
     def draw_target_lines(self, surface):
         # if there are sprites in the targeted group

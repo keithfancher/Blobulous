@@ -12,7 +12,7 @@ class Powerup(Enemy):
     def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor (which calls Sprite's constructor...)
         Enemy.__init__(self, x, y, dx, dy, randomize)
-         
+
         # Load the image
         self.image = pygame.image.load("images/powerup.png").convert()
         self.image.set_colorkey(pygame.Color('black'))
@@ -22,7 +22,7 @@ class Powerup(Enemy):
         # itself -- the collision rect for this image is already fine, but
         # we're comparing with circles so this needs *some* radius value.
         self.radius = 20
-        
+
         if randomize:
             self.random_spawn()
         else:

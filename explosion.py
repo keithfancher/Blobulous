@@ -19,7 +19,7 @@ class Explosion(pygame.sprite.Sprite):
 
         self.image = self.images[self.frame]
         self.rect = self.image.get_rect()
-        
+
         self.rect.center = center
 
     # Find a new position for the enemy

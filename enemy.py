@@ -17,16 +17,16 @@ class Enemy(pygame.sprite.Sprite):
     # Used by the circle collision detection. Allows a slightly smaller and
     # more accurate hit "box".
     radius = 21
-     
+
     def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, self.containers)
-         
+
         # Load the image
         self.image = pygame.image.load("images/enemy.png").convert()
         self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
-        
+
         if randomize:
             self.random_spawn()
         else:
