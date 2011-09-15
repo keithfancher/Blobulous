@@ -63,6 +63,17 @@ def draw_target_meter(screen, targets, max_targets, apeshit=False):
                          (surface_rect.left + line_x_pos, surface_rect.bottom))
 
 
+# There's an annoying delay while PyGame shuts down -- this function gives the
+# user some visual indication that things are closing down properly, and it's
+# not just hanging.
+def shut_down(screen, message="Shutting everything down..."):
+    print message
+    print_text(screen, message, 25, pygame.Color('red'),
+               midtop=screen.get_rect().midtop)
+    pygame.display.flip()
+    sys.exit()
+
+
 # My main() man
 def main():
 
@@ -120,8 +131,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print "Shutting everything down..."
-                sys.exit()
+                shut_down(screen)
 
             # TODO: non-shitty keyboard controls... and joystick?
             # Set the speed based on the key pressed
@@ -137,8 +147,7 @@ def main():
 
                 if event.key == pygame.K_ESCAPE:
                     if game_paused or player.is_dead():
-                        print "Shutting everything down..."
-                        sys.exit()
+                        shut_down(screen)
                     else:
                         game_paused = True
                         pygame.event.set_grab(False) # ungrab when paused
@@ -241,7 +250,7 @@ def main():
         else:
             all_sprites.update()
             player.draw_target_lines(screen)
-            all_sprites.draw(screen) # any way to control order of drawing?
+            all_sprites.draw(screen) # Any way to control order of drawing?
 
         # Draw the score
         print_text(screen, str(player.score), 30, pygame.Color('white'),
@@ -267,6 +276,7 @@ def main():
                        pygame.Color('white'), right=screen.get_rect().right-10,
                        bottom=screen.get_rect().bottom - 40)
         else:
+            # Prevents showing negative lives
             print_text(screen, "x 0", 20, pygame.Color('red'),
                        right=screen.get_rect().right-10,
                        bottom=screen.get_rect().bottom - 40)
