@@ -120,11 +120,10 @@ def main():
     # when it's pressed or released. Maybe PyGame has a better way to do this?
     mouse_down = False
 
-    # Grab input. Makes it easier to not lose focus when clicking around like a
-    # madman in windowed mode. Also solves an input bug.
-    pygame.event.set_grab(True)
-
-    game_paused = False
+    # Start the game paused and on the intro screen. This is a lazy way to
+    # handle game state, but it works.
+    game_paused = True
+    intro_screen = True
 
     # Main event loop
     while True:
@@ -157,8 +156,10 @@ def main():
                 # When the game is paused, any non-ESC key will unpause
                 else:
                     if game_paused:
+                        if intro_screen:
+                            intro_screen = False
                         game_paused = False
-                        pygame.event.set_grab(True)
+                        pygame.event.set_grab(True) # grab for less annoyance
 
             # Reset speed when key goes up
             if event.type == pygame.KEYUP:
@@ -233,13 +234,24 @@ def main():
 
         # Update and draw all sprite groups
         screen.fill(pygame.Color('black'))
-        if game_paused:
+        if game_paused and not intro_screen:
             print_text(screen, "PAUSED", 50, pygame.Color('red'),
                        midbottom=screen.get_rect().center)
             print_text(screen, "ESC to exit, any other key to resume", 25,
                        pygame.Color('darkgray'),
                        centerx=screen.get_rect().centerx,
                        centery=screen.get_rect().centery + 20)
+
+        # Show the intro screen instead of pause screen
+        elif game_paused and intro_screen:
+            print_text(screen, "BLOBULOUS.", 200, pygame.Color('red'),
+                       midbottom=screen.get_rect().center)
+            print_text(screen, "Press any key to begin, or ESC to exit", 25,
+                       pygame.Color('darkgray'),
+                       centerx=screen.get_rect().centerx,
+                       centery=screen.get_rect().centery + 20)
+
+        # Show the death screen
         elif player.is_dead():
             print_text(screen, "YOU PIED.", 50, pygame.Color('red'),
                        midbottom=screen.get_rect().center)
