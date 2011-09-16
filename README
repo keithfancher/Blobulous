@@ -1,4 +1,3 @@
-=========
 BLOBULOUS
 =========
 
@@ -18,7 +17,12 @@ indicated by a superfly new color scheme for your target meter.)
 
 CONTROLS:
 ---------
-Arrow keys -- move player
-Mouse -- move cursor
-Left mouse button -- hold to target enemies, release to fire
-Esc -- pause game, Esc again to exit
+Arrow keys:         move player
+Mouse:              move cursor
+Left mouse button:  hold to target enemies, release to fire
+Esc:                pause game, Esc again to exit
+
+
+REQUIREMENTS:
+-------------
+* PyGame (http://pygame.org/)

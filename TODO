@@ -1,8 +1,13 @@
-* extra lives at certain score(s)
+TODO
+====
+
+* game should get harder as time passes... or as score increases?
+    + probably score, since it shouldn't get harder as someone's just running
+      for their life..
+
+* extra lives at certain score(s) (200,000?)
 
 * better intro screen with instructions
-
-* better font(s)
 
 * high score table
 
@@ -15,18 +20,3 @@
 * powerdowns?
 
 * multiplayer?
-
-* what to do when player goes off-screen?
-    + maybe limit the player to a smaller rect in the screen?
-    + this would be good for multiplayer too... each player gets their own side
-      of the screen
-    + for now just don't let 'em go off-screen
-
-* fix weird input bug when screen loses focus
-    + The problem is that the program only adjusts players speed/direction when
-      a button is pressed or released. If you're holding up, the window loses
-      focus, and you release up, the program won't know you've released it and
-      the player will keep moving up. What we need to do is check the STATE of
-      the keys at any given time, and adjust player movement based on that.
-      Should make controls more fluid as well, though it seems less efficient.
-      Alternatively, could just grab the keys...

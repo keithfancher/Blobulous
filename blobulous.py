@@ -19,7 +19,7 @@ def print_text(screen, text, size, color, **kwargs):
     if not pygame.font:
         print "Warning: fonts disabled. Install pygame.font!"
     else:
-        font = pygame.font.Font(None, size)
+        font = pygame.font.Font('fonts/inconsolata.otf', size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(**kwargs)
         screen.blit(text_surface, text_rect)
@@ -69,7 +69,7 @@ def draw_target_meter(screen, targets, max_targets, apeshit=False):
 def shut_down(screen, message="Shutting everything down..."):
     print message
     print_text(screen, message, 25, pygame.Color('red'),
-               midtop=screen.get_rect().midtop)
+               midbottom=screen.get_rect().midbottom)
     pygame.display.flip()
     sys.exit()
 
@@ -232,8 +232,10 @@ def main():
                         print "That was your last life! You're dead."
                         print "Final score: %d" % player.score
 
-        # Update and draw all sprite groups
+        # Clear screen
         screen.fill(pygame.Color('black'))
+
+        # Game is paused
         if game_paused and not intro_screen:
             print_text(screen, "PAUSED", 50, pygame.Color('red'),
                        midbottom=screen.get_rect().center)
@@ -242,16 +244,16 @@ def main():
                        centerx=screen.get_rect().centerx,
                        centery=screen.get_rect().centery + 20)
 
-        # Show the intro screen instead of pause screen
+        # Intro screen
         elif game_paused and intro_screen:
-            print_text(screen, "BLOBULOUS.", 200, pygame.Color('red'),
-                       midbottom=screen.get_rect().center)
+            print_text(screen, "[BLOBULOUS]", 200, pygame.Color('red'),
+                       center=screen.get_rect().center)
             print_text(screen, "Press any key to begin, or ESC to exit", 25,
                        pygame.Color('darkgray'),
                        centerx=screen.get_rect().centerx,
-                       centery=screen.get_rect().centery + 20)
+                       centery=screen.get_rect().centery + 120)
 
-        # Show the death screen
+        # The player is dead
         elif player.is_dead():
             print_text(screen, "YOU PIED.", 50, pygame.Color('red'),
                        midbottom=screen.get_rect().center)
@@ -259,39 +261,45 @@ def main():
                        pygame.Color('darkgray'),
                        centerx=screen.get_rect().centerx,
                        centery=screen.get_rect().centery + 20)
+
+        # Otherwise update/draw everything normally
         else:
             all_sprites.update()
             player.draw_target_lines(screen)
             all_sprites.draw(screen) # Any way to control order of drawing?
 
-        # Draw the score
-        print_text(screen, str(player.score), 30, pygame.Color('white'),
-                   bottom=screen.get_rect().bottom - 8,
-                   right=screen.get_rect().right - 10)
+            # Draw the score
+            print_text(screen, str(player.score), 30, pygame.Color('white'),
+                       bottom=screen.get_rect().bottom - 8,
+                       right=screen.get_rect().right - 10)
+
+            # Draw target meter
+            draw_target_meter(screen, len(player.targeted), player.max_targets,
+                              player.apeshit_mode)
+
+            # Draw num lives
+            dest_rect = player.images[0].get_rect(
+                right=screen.get_rect().right - 33,
+                bottom=screen.get_rect().bottom - 40
+            )
+            screen.blit(player.images[0], dest_rect)
+            if not player.is_dead():
+                print_text(screen, "x%d" % player.extra_lives, 20,
+                    pygame.Color('white'),
+                    right=screen.get_rect().right - 10,
+                    bottom=screen.get_rect().bottom- 40
+                )
+            else:
+                # Prevents showing negative lives
+                print_text(screen, "x0", 20, pygame.Color('red'),
+                           right=screen.get_rect().right - 10,
+                           bottom=screen.get_rect().bottom - 40)
 
         # Draw the FPS
         if s.SHOW_FPS:
-            print_text(screen, "%.2f" % clock.get_fps(), 30,
+            print_text(screen, "%.2f" % clock.get_fps(), 20,
                        pygame.Color('white'),
                        bottom=screen.get_rect().bottom - 8, left=10)
-
-        # Draw the target meter
-        draw_target_meter(screen, len(player.targeted), player.max_targets,
-                          player.apeshit_mode)
-
-        # Draw num lives
-        dest_rect = player.images[0].get_rect(right=screen.get_rect().right-33,
-                                             bottom=screen.get_rect().bottom-40)
-        screen.blit(player.images[0], dest_rect)
-        if not player.is_dead():
-            print_text(screen, "x %d" % player.extra_lives, 20,
-                       pygame.Color('white'), right=screen.get_rect().right-10,
-                       bottom=screen.get_rect().bottom - 40)
-        else:
-            # Prevents showing negative lives
-            print_text(screen, "x 0", 20, pygame.Color('red'),
-                       right=screen.get_rect().right-10,
-                       bottom=screen.get_rect().bottom - 40)
 
         # Flip screen
         pygame.display.flip()
