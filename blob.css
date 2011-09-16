@@ -1,0 +1,40 @@
+body {
+  background: black;
+  color: gray;
+/*  font-family: Helvetica, Arial, sans-serif; */
+  font-family: 'IM Fell English SC', serif;
+  font-size: 30px;
+}
+
+.container {
+  width: 600px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 350%;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+p {
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+p.center {
+  margin-left: 100px;
+  color: white;
+}
+
+img {
+  padding-left: 10px;
+}
+
+hr {
+  width: 20%;
+  margin: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
