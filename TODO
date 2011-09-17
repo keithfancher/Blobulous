@@ -1,22 +1,26 @@
 TODO
 ====
 
-* game should get harder as time passes... or as score increases?
-    + probably score, since it shouldn't get harder as someone's just running
-      for their life..
+* say "APESHIT" somewhere when they go apeshit... and/or play a sound?
 
-* extra lives at certain score(s) (200,000?)
+* extra lives at certain score(s) (100,000?)
+
+* nuke... maybe give them the power to nuke once for every time they go apeshit
 
 * better intro screen with instructions
 
 * high score table
 
-* targeting reticule that can grow or shrink... another powerup/down?
+* more optimized drawing, hit target fps on slower devices
 
 * should enemies bounce off of each other? or blow each other up?
 
-* powerup that nukes everything on the screen?
-
 * powerdowns?
+
+* targeting reticule that can grow or shrink... another powerup/down?
+
+* sound?
+
+* joystick controls?
 
 * multiplayer?

@@ -63,6 +63,17 @@ def draw_target_meter(screen, targets, max_targets, apeshit=False):
                          (surface_rect.left + line_x_pos, surface_rect.bottom))
 
 
+# Based on the player's current score, determines the probability of an enemy
+# spawning that frame, then based on that probability it returns a bool that
+# says if one should spawn or not.
+def should_spawn_enemy(score):
+    # There's a (prob_range / 30) chance an enemy will spawn. prob_range starts
+    # at 1, and increases by 1 every time the score increases by 10,000. If the
+    # player manages to get to 30/30, an enemy will spawn every frame...
+    prob_range = (score / 10000) + 1
+    return random.randint(1, 30) in range(1, prob_range + 1)
+
+
 # There's an annoying delay while PyGame shuts down -- this function gives the
 # user some visual indication that things are closing down properly, and it's
 # not just hanging.
@@ -132,17 +143,16 @@ def main():
             if event.type == pygame.QUIT:
                 shut_down(screen)
 
-            # TODO: non-shitty keyboard controls... and joystick?
             # Set the speed based on the key pressed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    player.changespeed(-3,0)
+                    player.changespeed(-3, 0)
                 if event.key == pygame.K_RIGHT:
-                    player.changespeed(3,0)
+                    player.changespeed(3, 0)
                 if event.key == pygame.K_UP:
-                    player.changespeed(0,-3)
+                    player.changespeed(0, -3)
                 if event.key == pygame.K_DOWN:
-                    player.changespeed(0,3)
+                    player.changespeed(0, 3)
 
                 if event.key == pygame.K_ESCAPE:
                     if game_paused or player.is_dead():
@@ -201,9 +211,9 @@ def main():
                 if enemy.rect.collidepoint(mouse_position):
                     player.target_enemy(enemy)
 
-        # For now, there's a 1/10 chance a new enemy will spawn. Later I'll
-        # make this based on timing, the level, the score, etc.
-        if random.randint(1, 10) == 5 and not game_paused:
+        # Randomly spawn enemies. The frequency of enemies spawning depends on
+        # the score.
+        if should_spawn_enemy(player.score) and not game_paused:
             enemies.add(Enemy(randomize=True))
 
         # And a 1/175 chance a new powerup will spawn...
@@ -237,7 +247,7 @@ def main():
 
         # Game is paused
         if game_paused and not intro_screen:
-            print_text(screen, "PAUSED", 50, pygame.Color('red'),
+            print_text(screen, "PAUSED", 100, pygame.Color('red'),
                        midbottom=screen.get_rect().center)
             print_text(screen, "ESC to exit, any other key to resume", 25,
                        pygame.Color('darkgray'),
@@ -255,12 +265,16 @@ def main():
 
         # The player is dead
         elif player.is_dead():
-            print_text(screen, "YOU PIED.", 50, pygame.Color('red'),
+            print_text(screen, "YOU PIED.", 100, pygame.Color('red'),
                        midbottom=screen.get_rect().center)
             print_text(screen, "ESC to exit", 25,
                        pygame.Color('darkgray'),
                        centerx=screen.get_rect().centerx,
                        centery=screen.get_rect().centery + 20)
+            print_text(screen, "Final score: %d" % player.score, 30,
+                       pygame.Color('white'),
+                       centerx=screen.get_rect().centerx,
+                       centery=screen.get_rect().centery + 130)
 
         # Otherwise update/draw everything normally
         else:

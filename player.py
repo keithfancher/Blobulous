@@ -106,11 +106,9 @@ class Player(pygame.sprite.Sprite):
     def power_up(self):
         if self.max_targets < 10:
             self.max_targets += 1
-            print "Powered up! Targets: %d" % self.max_targets
         else:
             # enter APESHIT MODE!!!
             self.apeshit_mode = True
-            print "APESHIT MODE! SUPER SCORE BONUSES!"
 
     def power_down(self):
         # can never target fewer than ONE enemy/powerup
