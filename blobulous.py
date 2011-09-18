@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-
-import sys
 import random
 import pygame
 
@@ -11,57 +9,7 @@ from enemy import Enemy
 from powerup import Powerup
 from cursor import Cursor
 from explosion import Explosion
-
-
-# Write text to a given surface using pygame.font, or fails with a warning if
-# pygame.font isn't available.
-def print_text(screen, text, size, color, **kwargs):
-    if not pygame.font:
-        print "Warning: fonts disabled. Install pygame.font!"
-    else:
-        font = pygame.font.Font('fonts/inconsolata.otf', size)
-        text_surface = font.render(text, True, color)
-        text_rect = text_surface.get_rect(**kwargs)
-        screen.blit(text_surface, text_rect)
-
-
-# Draw a nifty target meter!
-# TODO: this should be a Player method, passed a screen
-def draw_target_meter(screen, targets, max_targets, apeshit=False):
-    meter_w = 200
-    meter_h = 10
-
-    # change meter colors if player in apeshit mode
-    if apeshit:
-        base_color = (78, 197, 219) # light blue
-        bar_color = (255, 0, 255) # bright-ass pink-ish
-    else:
-        base_color = pygame.Color('yellow')
-        bar_color = pygame.Color('red')
-
-    surface = pygame.Surface((meter_w, meter_h))
-    surface.fill(base_color)
-    surface_rect = surface.get_rect(centerx=screen.get_rect().centerx,
-                                    centery=screen.get_rect().bottom - 20)
-    # inner!
-    inner_w = (targets * meter_w) / max_targets
-    inner_h = meter_h
-    inner_surface = pygame.Surface((inner_w, inner_h))
-    inner_surface.fill(bar_color)
-    inner_rect = inner_surface.get_rect(topleft=surface_rect.topleft)
-
-    # bliznit
-    screen.blit(surface, surface_rect)
-    screen.blit(inner_surface, inner_rect)
-
-    # draw dividing lines
-    segment_width = meter_w / max_targets
-    line_x_pos = 0
-    for i in xrange(max_targets - 1):
-        line_x_pos += segment_width
-        pygame.draw.line(screen, pygame.Color('black'),
-                         (surface_rect.left + line_x_pos, surface_rect.top),
-                         (surface_rect.left + line_x_pos, surface_rect.bottom))
+from util import print_text, shut_down
 
 
 # Based on the player's current score, determines the probability of an enemy
@@ -75,15 +23,38 @@ def should_spawn_enemy(score):
     return random.randint(1, 30) in range(1, prob_range + 1)
 
 
-# There's an annoying delay while PyGame shuts down -- this function gives the
-# user some visual indication that things are closing down properly, and it's
-# not just hanging.
-def shut_down(screen, message="Shutting everything down..."):
-    print message
-    print_text(screen, message, 25, pygame.Color('red'),
-               midbottom=screen.get_rect().midbottom)
-    pygame.display.flip()
-    sys.exit()
+# Show pause screen
+def draw_pause_screen(surface):
+    print_text(surface, "PAUSED", 100, pygame.Color('red'),
+               midbottom=surface.get_rect().center)
+    print_text(surface, "ESC to exit, any other key to resume", 25,
+               pygame.Color('darkgray'),
+               centerx=surface.get_rect().centerx,
+               centery=surface.get_rect().centery + 20)
+
+
+# Show intro screen
+def draw_intro_screen(surface):
+    print_text(surface, "[BLOBULOUS]", 200, pygame.Color('red'),
+               center=surface.get_rect().center)
+    print_text(surface, "Press any key to begin, or ESC to exit", 25,
+               pygame.Color('darkgray'),
+               centerx=surface.get_rect().centerx,
+               centery=surface.get_rect().centery + 120)
+
+
+# Show death screen
+def draw_death_screen(surface, score):
+    print_text(surface, "YOU PIED.", 100, pygame.Color('red'),
+               midbottom=surface.get_rect().center)
+    print_text(surface, "ESC to exit", 25,
+               pygame.Color('darkgray'),
+               centerx=surface.get_rect().centerx,
+               centery=surface.get_rect().centery + 20)
+    print_text(surface, "Final score: %d" % score, 30,
+               pygame.Color('white'),
+               centerx=surface.get_rect().centerx,
+               centery=surface.get_rect().centery + 130)
 
 
 # My main() man
@@ -252,70 +223,28 @@ def main():
 
         # Game is paused
         if game_paused and not intro_screen:
-            print_text(screen, "PAUSED", 100, pygame.Color('red'),
-                       midbottom=screen.get_rect().center)
-            print_text(screen, "ESC to exit, any other key to resume", 25,
-                       pygame.Color('darkgray'),
-                       centerx=screen.get_rect().centerx,
-                       centery=screen.get_rect().centery + 20)
+            draw_pause_screen(screen)
 
         # Intro screen
         elif game_paused and intro_screen:
-            print_text(screen, "[BLOBULOUS]", 200, pygame.Color('red'),
-                       center=screen.get_rect().center)
-            print_text(screen, "Press any key to begin, or ESC to exit", 25,
-                       pygame.Color('darkgray'),
-                       centerx=screen.get_rect().centerx,
-                       centery=screen.get_rect().centery + 120)
+            draw_intro_screen(screen)
 
         # The player is dead
         elif player.is_dead():
-            print_text(screen, "YOU PIED.", 100, pygame.Color('red'),
-                       midbottom=screen.get_rect().center)
-            print_text(screen, "ESC to exit", 25,
-                       pygame.Color('darkgray'),
-                       centerx=screen.get_rect().centerx,
-                       centery=screen.get_rect().centery + 20)
-            print_text(screen, "Final score: %d" % player.score, 30,
-                       pygame.Color('white'),
-                       centerx=screen.get_rect().centerx,
-                       centery=screen.get_rect().centery + 130)
+            draw_death_screen(screen, player.score)
 
         # Otherwise update/draw everything normally
         else:
+            # All the sprite groups
             all_sprites.update()
             player.draw_target_lines(screen)
             all_sprites.draw(screen) # Any way to control order of drawing?
 
-            # Draw the score
-            # TODO: this could easily be a Player method as well
-            print_text(screen, str(player.score), 30, pygame.Color('white'),
-                       bottom=screen.get_rect().bottom - 8,
-                       right=screen.get_rect().right - 10)
-
-            # Draw target meter and nuke indicator
-            draw_target_meter(screen, len(player.targeted), player.max_targets,
-                              player.apeshit_mode)
+            # Score, target meter, nuke indicator, number of lives
+            player.draw_score(screen)
+            player.draw_target_meter(screen)
             player.draw_nukes(screen)
-
-            # Draw num lives
-            # TODO: this should be a Player mehtod
-            dest_rect = player.images[0].get_rect(
-                right=screen.get_rect().right - 33,
-                bottom=screen.get_rect().bottom - 40
-            )
-            screen.blit(player.images[0], dest_rect)
-            if not player.is_dead():
-                print_text(screen, "x%d" % player.extra_lives, 20,
-                    pygame.Color('white'),
-                    right=screen.get_rect().right - 10,
-                    bottom=screen.get_rect().bottom- 40
-                )
-            else:
-                # Prevents showing negative lives
-                print_text(screen, "x0", 20, pygame.Color('red'),
-                           right=screen.get_rect().right - 10,
-                           bottom=screen.get_rect().bottom - 40)
+            player.draw_num_lives(screen)
 
         # Draw the FPS
         if s.SHOW_FPS:

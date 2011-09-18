@@ -2,6 +2,7 @@ import pygame
 
 import settings as s
 from powerup import Powerup
+from util import print_text
 
 
 class Player(pygame.sprite.Sprite):
@@ -122,6 +123,70 @@ class Player(pygame.sprite.Sprite):
             for target in self.targeted:
                 pygame.draw.aaline(surface, pygame.Color('red'),
                                    self.rect.center, target.rect.center)
+
+    # Shows number of lives player has on given surface
+    def draw_num_lives(self, surface):
+        dest_rect = self.images[0].get_rect(
+            right=surface.get_rect().right - 33,
+            bottom=surface.get_rect().bottom - 40
+        )
+        surface.blit(self.images[0], dest_rect)
+        if not self.is_dead():
+            print_text(surface, "x%d" % self.extra_lives, 20,
+                pygame.Color('white'),
+                right=surface.get_rect().right - 10,
+                bottom=surface.get_rect().bottom- 40
+            )
+        else:
+            # Prevents showing negative lives
+            print_text(surface, "x0", 20, pygame.Color('red'),
+                       right=surface.get_rect().right - 10,
+                       bottom=surface.get_rect().bottom - 40)
+
+    # Draw a nifty target meter!
+    def draw_target_meter(self, screen):
+        meter_w = 200
+        meter_h = 10
+        targets = len(self.targeted)
+
+        # change meter colors if player in apeshit mode
+        if self.apeshit_mode:
+            base_color = (78, 197, 219) # light blue
+            bar_color = (255, 0, 255) # bright-ass pink-ish
+        else:
+            base_color = pygame.Color('yellow')
+            bar_color = pygame.Color('red')
+
+        surface = pygame.Surface((meter_w, meter_h))
+        surface.fill(base_color)
+        surface_rect = surface.get_rect(centerx=screen.get_rect().centerx,
+                                        centery=screen.get_rect().bottom - 20)
+        # inner!
+        inner_w = (targets * meter_w) / self.max_targets
+        inner_h = meter_h
+        inner_surface = pygame.Surface((inner_w, inner_h))
+        inner_surface.fill(bar_color)
+        inner_rect = inner_surface.get_rect(topleft=surface_rect.topleft)
+
+        # bliznit
+        screen.blit(surface, surface_rect)
+        screen.blit(inner_surface, inner_rect)
+
+        # draw dividing lines
+        segment_width = meter_w / self.max_targets
+        line_x_pos = 0
+        for i in xrange(self.max_targets - 1):
+            line_x_pos += segment_width
+            pygame.draw.line(screen, pygame.Color('black'),
+                (surface_rect.left + line_x_pos, surface_rect.top),
+                (surface_rect.left + line_x_pos, surface_rect.bottom)
+            )
+
+    # Draw the score on given surface
+    def draw_score(self, surface):
+        print_text(surface, str(self.score), 30, pygame.Color('white'),
+                   bottom=surface.get_rect().bottom - 8,
+                   right=surface.get_rect().right - 10)
 
     def power_up(self):
         if self.max_targets < 10:
