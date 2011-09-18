@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
     extra_lives = 2 # Starting number
     score = 0
     apeshit_mode = False # Super powered up!!!
+    nukes = 0
     radius = 10 # Used for circular collision detection
     images = [] # Images used for animation
 
@@ -33,6 +34,9 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[0]
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+
+        self.nuke_image = pygame.image.load("images/nuke.png").convert()
+        self.nuke_image.set_colorkey(pygame.Color('black'))
 
     # Change the speed of the player
     def changespeed(self, x, y):
@@ -81,19 +85,35 @@ class Player(pygame.sprite.Sprite):
         # 100 points for every enemy killed, then an additional multiplier for
         # killing mutliple enemies in one go.
         if self.apeshit_mode:
-            # for now apeshit mode just doubles the score you'd get
+            # Apeshit mode doubles the score you'd get
             self.score += 100 * len(self.targeted) * len(self.targeted) * 2
         else:
             self.score += 100 * len(self.targeted) * len(self.targeted)
         for target in self.targeted:
-            # Is this the best way to check for Powerup vs. Enemy?
             if isinstance(target, Powerup):
-                self.power_up()
-            else:
-                # Eventually some score code should probably go here
-                pass
-
+                if self.apeshit_mode:
+                    self.nukes = 1 # Only 1 nuke at a time
+                else:
+                    self.power_up()
             target.kill()
+
+    # Nuke 'em all! Kills all enemies on screen.
+    def nuke(self, enemy_group):
+        if self.nukes:
+            # No score bonuses when nuking. Also don't get any powerups.
+            self.score += 100 * len(enemy_group)
+            self.nukes -= 1
+            for enemy in enemy_group:
+                enemy.kill()
+
+    # Draw nuke indicators (right now only one at a time)
+    def draw_nukes(self, surface):
+        if self.nukes:
+            rect = self.nuke_image.get_rect(
+                centerx=surface.get_rect().centerx + 125,
+                centery=surface.get_rect().bottom - 22
+            )
+            surface.blit(self.nuke_image, rect)
 
     # Draw the lines from self to targets
     def draw_target_lines(self, surface):
@@ -120,6 +140,7 @@ class Player(pygame.sprite.Sprite):
         self.extra_lives -= 1
         self.max_targets = 2
         self.apeshit_mode = False # no more apeshit
+        self.nukes = 0 # lose nukes when hit?
 
     def is_dead(self):
         return self.extra_lives < 0

@@ -26,6 +26,7 @@ def print_text(screen, text, size, color, **kwargs):
 
 
 # Draw a nifty target meter!
+# TODO: this should be a Player method, passed a screen
 def draw_target_meter(screen, targets, max_targets, apeshit=False):
     meter_w = 200
     meter_h = 10
@@ -174,13 +175,13 @@ def main():
             # Reset speed when key goes up
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
-                    player.changespeed(3,0)
+                    player.changespeed(3, 0)
                 if event.key == pygame.K_RIGHT:
-                    player.changespeed(-3,0)
+                    player.changespeed(-3, 0)
                 if event.key == pygame.K_UP:
-                    player.changespeed(0,3)
+                    player.changespeed(0, 3)
                 if event.key == pygame.K_DOWN:
-                    player.changespeed(0,-3)
+                    player.changespeed(0, -3)
 
             # Update the cursor position
             if event.type == pygame.MOUSEMOTION:
@@ -188,13 +189,17 @@ def main():
 
             # When the mouse button is released, kill any targeted enemies
             if event.type == pygame.MOUSEBUTTONUP:
-                # 1 = left mouse button
+                # Button 1 is left mouse button
                 if event.button == 1 and not (game_paused or player.is_dead()):
                     mouse_down = False
                     player.kill_targeted()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and not (game_paused or player.is_dead()):
                     mouse_down = True
+
+                # Button 3 is right... nuke 'em!
+                if event.button == 3 and not (game_paused or player.is_dead()):
+                    player.nuke(enemies)
 
         # Move the cursor... maybe only do this when we get mouse movement?
 #        cursor.rect.center = pygame.mouse.get_pos()
@@ -283,15 +288,18 @@ def main():
             all_sprites.draw(screen) # Any way to control order of drawing?
 
             # Draw the score
+            # TODO: this could easily be a Player method as well
             print_text(screen, str(player.score), 30, pygame.Color('white'),
                        bottom=screen.get_rect().bottom - 8,
                        right=screen.get_rect().right - 10)
 
-            # Draw target meter
+            # Draw target meter and nuke indicator
             draw_target_meter(screen, len(player.targeted), player.max_targets,
                               player.apeshit_mode)
+            player.draw_nukes(screen)
 
             # Draw num lives
+            # TODO: this should be a Player mehtod
             dest_rect = player.images[0].get_rect(
                 right=screen.get_rect().right - 33,
                 bottom=screen.get_rect().bottom - 40

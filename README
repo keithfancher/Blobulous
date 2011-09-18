@@ -3,26 +3,39 @@ BLOBULOUS
 
 Sort of like Rez (http://en.wikipedia.org/wiki/Rez) meets Asteroids?
 
-Hold the down mouse button and drag across enemies/powerups to target, release
-to fire.  Each powerup lets you target more enemies simultaneously.  The more
-you kill at once, the bigger the score multiplier.  Each time you get hit, you
-lose a life and your max number of targetable enemies/powerups gets reset.
-Lose all your lives and you're dead!
 
-Note: the max number of enemies you can target at once is 10.  Once you've
-reached that and you collect another powerup, you enter APESHIT MODE.  You'll
-get double points for all your kills until you lose a life.  (Apeshit mode is
+THE BASICS
+----------
+Hold the down the left mouse button and drag across enemies/powerups to target,
+release to fire.  Each powerup lets you target more enemies simultaneously.
+The more you kill at once, the bigger the score multiplier.  Each time you get
+hit, you lose a life and your max number of targetable enemies/powerups gets
+reset.  Lose all your lives and you're dead!
+
+
+APESHIT MODE
+------------
+The max number of enemies you can target at once is 10.  Once you've reached
+that and you collect another powerup, you enter APESHIT MODE.  You'll get
+double points for all your kills until you lose a life.  (Apeshit mode is
 indicated by a superfly new color scheme for your target meter.)
+
+If you collect a powerup while in apeshit mode, you will earn a NUKE.  Right
+click to nuke every enemy and powerup on the screen.  You will receive only the
+base 100 points per enemy when you use a nuke -- no score multipliers, and no
+powerups.  So make it count.  Also note: you can only hold 1 nuke at a time.
 
 
 CONTROLS:
 ---------
-Arrow keys:         move player
-Mouse:              move cursor
-Left mouse button:  hold to target enemies, release to fire
-Esc:                pause game, Esc again to exit
+Arrow keys:         Move player
+Mouse:              Move cursor
+Left mouse button:  Hold to target enemies, release to fire
+Right mouse button: Use nuke
+Esc:                Pause game, Esc again to exit
 
 
 REQUIREMENTS:
 -------------
 * PyGame (http://pygame.org/)
+* Python (http://python.org/), naturally
