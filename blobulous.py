@@ -12,19 +12,17 @@ from explosion import Explosion
 from util import print_text, shut_down
 
 
-# Based on the player's current score, determines the probability of an enemy
-# spawning that frame, then based on that probability it returns a bool that
-# says if one should spawn or not.
 def should_spawn_enemy(score):
-    # There's a (prob_range / 30) chance an enemy will spawn. prob_range starts
-    # at 1, and increases by 1 every time the score increases by 10,000. If the
-    # player manages to get to 30/30, an enemy will spawn every frame...
+    """There's a (prob_range / 30) chance an enemy will spawn. prob_range
+    starts at 1, and increases by 1 every time the score increases by 10,000.
+    If the player manages to get to 30/30, an enemy will spawn every
+    frame..."""
     prob_range = (score / 10000) + 1
     return random.randint(1, 30) in range(1, prob_range + 1)
 
 
-# Show pause screen
 def draw_pause_screen(surface):
+    """Draw pause screen to given surface"""
     print_text(surface, "PAUSED", 100, pygame.Color('red'),
                midbottom=surface.get_rect().center)
     print_text(surface, "ESC to exit, any other key to resume", 25,
@@ -33,8 +31,8 @@ def draw_pause_screen(surface):
                centery=surface.get_rect().centery + 20)
 
 
-# Show intro screen
 def draw_intro_screen(surface):
+    """Draw intro screen to given surface"""
     print_text(surface, "[BLOBULOUS]", 200, pygame.Color('red'),
                center=surface.get_rect().center)
     print_text(surface, "Press any key to begin, or ESC to exit", 25,
@@ -43,8 +41,8 @@ def draw_intro_screen(surface):
                centery=surface.get_rect().centery + 120)
 
 
-# Show death screen
 def draw_death_screen(surface, score):
+    """Draw death screen to given surface"""
     print_text(surface, "YOU PIED.", 100, pygame.Color('red'),
                midbottom=surface.get_rect().center)
     print_text(surface, "ESC to exit", 25,
@@ -57,10 +55,8 @@ def draw_death_screen(surface, score):
                centery=surface.get_rect().centery + 130)
 
 
-# My main() man
 def main():
-
-    # PyGame init stuff
+    """ My main() man!"""
     pygame.init()
     pygame.display.set_caption('Blobulous')
     screen = pygame.display.set_mode([s.SCREEN_W, s.SCREEN_H])

@@ -1,10 +1,12 @@
-import pygame
 import sys
+import pygame
 
 
-# Writes text to a given surface using pygame.font, or fails with a warning if
-# pygame.font isn't available.
 def print_text(screen, text, size, color, **kwargs):
+    """Writes text to a given surface using pygame.font, or fails with a
+    warning if pygame.font isn't available. The **kwargs are passed to
+    get_rect(), and can be used to easily position the text on the target
+    surface."""
     if not pygame.font:
         print "Warning: fonts disabled. Install pygame.font!"
     else:
@@ -14,10 +16,10 @@ def print_text(screen, text, size, color, **kwargs):
         screen.blit(text_surface, text_rect)
 
 
-# There's an annoying delay while PyGame shuts down -- this function gives the
-# user some visual indication that things are closing down properly, and it's
-# not just hanging.
 def shut_down(screen, message="Shutting everything down..."):
+    """There's an annoying delay while Pygame shuts down -- this function gives
+    the user some visual indication that things are closing down properly, and
+    the game's not just hanging."""
     print message
     print_text(screen, message, 25, pygame.Color('red'),
                midbottom=screen.get_rect().midbottom)

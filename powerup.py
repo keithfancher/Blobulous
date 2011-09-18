@@ -4,10 +4,11 @@ import pygame
 from enemy import Enemy
 
 
-# Inherits from Enemy class. That doesn't quite make sense, conceptually. They
-# should probably both inherit from a TargetableObject class or something, but
-# this works for now.
 class Powerup(Enemy):
+    """Inherits from Enemy class. That doesn't quite make sense, conceptually.
+    They should probably both inherit from a TargetableObject class or
+    something, but this works great for now. I'll likely change this if/when I
+    implement powerdowns."""
 
     def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor (which calls Sprite's constructor...)

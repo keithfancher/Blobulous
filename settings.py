@@ -1,9 +1,9 @@
-# A bunch of constants for testing and tweaking settings
+"""A bunch of constants for testing and tweaking settings"""
 
 # Screen size
 #SCREEN_W = 800
 #SCREEN_H = 600
-# Widescreen testing...
+# Widescreen...
 SCREEN_W = 1200
 SCREEN_H = 675
 

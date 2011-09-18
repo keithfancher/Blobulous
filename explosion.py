@@ -7,7 +7,7 @@ class Explosion(pygame.sprite.Sprite):
     frame = 0
     frame_count = 0
 
-    def __init__(self, center):
+    def __init__(self, pos):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, self.containers)
 
@@ -18,12 +18,10 @@ class Explosion(pygame.sprite.Sprite):
             self.images[i].set_colorkey((69, 78, 91))
 
         self.image = self.images[self.frame]
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(center=pos)
 
-        self.rect.center = center
-
-    # Find a new position for the enemy
     def update(self):
+        """Animate the explosion"""
         self.frame_count += 1
 
         # slow the explosion animation down a tad

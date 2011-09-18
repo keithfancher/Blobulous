@@ -34,31 +34,28 @@ class Enemy(pygame.sprite.Sprite):
             self.delta_x = dx
             self.delta_y = dy
 
-    # Find a new position for the enemy
     def update(self):
+        """Update enemy position"""
         self.rect.top += self.delta_y
         self.rect.left += self.delta_x
-        # If we're more than 60 pixels off the screen, destroy the object
-        self.kill_if_offscreen()
+        self.kill_if_offscreen() # Destroy object if offscreen
 
-    # Override Sprite.kill() so enemies (and their descendent classes) will
-    # explode instead of just disappearing
     def kill(self):
-        # This is automatically added to the proper sprite group thanks to the
-        # magic of Self.containers
-        Explosion(self.rect.center)
+        """Override Sprite.kill() so enemies (and their descendent classes)
+        will explode instead of just disappearing"""
+        Explosion(self.rect.center) # added to proper Group automatically
         pygame.sprite.Sprite.kill(self)
 
-    # Kill any enemies that go more than 60 pixels off the screen
     def kill_if_offscreen(self):
+        """Kill any enemies that go more than 60 pixels off the screen"""
         if self.rect.left < -60 or self.rect.left > s.SCREEN_W + 60:
             self.kill()
         elif self.rect.top < -60 or self.rect.top > s.SCREEN_H + 60:
             self.kill()
 
-    # Spawns somewhere off the screen with random direction and speed
-    # TODO: Uses randint() incorrectly! Fix ranges for speeds.
     def random_spawn(self):
+        """Spawns somewhere off the screen with random direction and speed"""
+
         # Directional constants... makes this shit a bit easier to read
         TOP = 0
         BOTTOM = 1
@@ -78,7 +75,7 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.left = random.randint(0, s.SCREEN_W - self.rect.width)
             self.rect.top = s.SCREEN_H
             self.delta_x = random.randint(-5, 5)
-            self.delta_y = random.randint(-5, 0) # gotta move up
+            self.delta_y = random.randint(-5, -1) # gotta move up
 
         elif spawn_location == LEFT:
             self.rect.right = 0
@@ -89,5 +86,5 @@ class Enemy(pygame.sprite.Sprite):
         elif spawn_location == RIGHT:
             self.rect.left = s.SCREEN_W
             self.rect.top = random.randint(0, s.SCREEN_H - self.rect.height)
-            self.delta_x = random.randint(-5, 0) # gotta move left
+            self.delta_x = random.randint(-5, -1) # gotta move left
             self.delta_y = random.randint(-5, 5)

@@ -13,7 +13,3 @@ class Cursor(pygame.sprite.Sprite):
         self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
-
-    # Find a new position for the player
-    def update(self):
-        pass

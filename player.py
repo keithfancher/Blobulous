@@ -33,19 +33,18 @@ class Player(pygame.sprite.Sprite):
         self.images[1].set_colorkey(pygame.Color('black'))
 
         self.image = self.images[0]
-        self.rect = self.image.get_rect()
-        self.rect.center = [x, y]
+        self.rect = self.image.get_rect(center=(x, y))
 
         self.nuke_image = pygame.image.load("images/nuke.png").convert()
         self.nuke_image.set_colorkey(pygame.Color('black'))
 
-    # Change the speed of the player
     def changespeed(self, x, y):
+        """Change speed/direction of player"""
         self.delta_x += x
         self.delta_y += y
 
-    # Find a new position for the player
     def update(self):
+        """Update position of player -- called every frame"""
         self.rect.top += self.delta_y
         self.rect.left += self.delta_x
 
@@ -65,24 +64,24 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = self.images[0]
 
-    # Add an enemy to the targeted group
     def target_enemy(self, enemy):
-        # don't target if we've reached our max
+        """Add an enemy to the targeted group"""
         if len(self.targeted) < self.max_targets:
             self.targeted.add(enemy)
             enemy.targeted = True
 
-    # Remove enemy from the targeted group
     def untarget_enemy(self, enemy):
+        """Remove enemy from the targeted group"""
         self.targeted.remove(enemy)
         enemy.targeted = False
 
-    # Remove all enemies from the targted group
     def untarget_all(self):
+        """Remove all enemies from the targted group"""
         self.targeted.empty()
 
-    # Kills all targeted enemies
     def kill_targeted(self):
+        """Kills all targeted enemies, and tallies up the points"""
+
         # 100 points for every enemy killed, then an additional multiplier for
         # killing mutliple enemies in one go.
         if self.apeshit_mode:
@@ -98,8 +97,8 @@ class Player(pygame.sprite.Sprite):
                     self.power_up()
             target.kill()
 
-    # Nuke 'em all! Kills all enemies on screen.
     def nuke(self, enemy_group):
+        """Nukes all enemies on screen"""
         if self.nukes:
             # No score bonuses when nuking. Also don't get any powerups.
             self.score += 100 * len(enemy_group)
@@ -107,8 +106,8 @@ class Player(pygame.sprite.Sprite):
             for enemy in enemy_group:
                 enemy.kill()
 
-    # Draw nuke indicators (right now only one at a time)
     def draw_nukes(self, surface):
+        """Draw nuke indicators (right now only one at a time)"""
         if self.nukes:
             rect = self.nuke_image.get_rect(
                 centerx=surface.get_rect().centerx + 125,
@@ -116,16 +115,15 @@ class Player(pygame.sprite.Sprite):
             )
             surface.blit(self.nuke_image, rect)
 
-    # Draw the lines from self to targets
     def draw_target_lines(self, surface):
-        # if there are sprites in the targeted group
+        """Draw the lines from self to targets"""
         if(self.targeted):
             for target in self.targeted:
                 pygame.draw.aaline(surface, pygame.Color('red'),
                                    self.rect.center, target.rect.center)
 
-    # Shows number of lives player has on given surface
     def draw_num_lives(self, surface):
+        """Shows number of lives player has on given surface"""
         dest_rect = self.images[0].get_rect(
             right=surface.get_rect().right - 33,
             bottom=surface.get_rect().bottom - 40
@@ -143,8 +141,8 @@ class Player(pygame.sprite.Sprite):
                        right=surface.get_rect().right - 10,
                        bottom=surface.get_rect().bottom - 40)
 
-    # Draw a nifty target meter!
     def draw_target_meter(self, screen):
+        """Draw a nifty target meter!"""
         meter_w = 200
         meter_h = 10
         targets = len(self.targeted)
@@ -182,13 +180,14 @@ class Player(pygame.sprite.Sprite):
                 (surface_rect.left + line_x_pos, surface_rect.bottom)
             )
 
-    # Draw the score on given surface
     def draw_score(self, surface):
+        """Draw the score on given surface"""
         print_text(surface, str(self.score), 30, pygame.Color('white'),
                    bottom=surface.get_rect().bottom - 8,
                    right=surface.get_rect().right - 10)
 
     def power_up(self):
+        """More targets means more awesome!"""
         if self.max_targets < 10:
             self.max_targets += 1
         else:
@@ -196,16 +195,18 @@ class Player(pygame.sprite.Sprite):
             self.apeshit_mode = True
 
     def power_down(self):
+        """ :( """
         # can never target fewer than ONE enemy/powerup
         if self.max_targets > 1:
             self.max_targets -= 1
 
-    # Decrease lives and lower target # back to 2
     def decrease_lives(self):
+        """Decrease lives and lower target # back to 2"""
         self.extra_lives -= 1
         self.max_targets = 2
         self.apeshit_mode = False # no more apeshit
         self.nukes = 0 # lose nukes when hit?
 
     def is_dead(self):
+        """This is a more profound question that it initially appears"""
         return self.extra_lives < 0
