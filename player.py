@@ -208,5 +208,5 @@ class Player(pygame.sprite.Sprite):
         self.nukes = 0 # lose nukes when hit?
 
     def is_dead(self):
-        """This is a more profound question that it initially appears"""
+        """This is a more profound question than it initially appears"""
         return self.extra_lives < 0
