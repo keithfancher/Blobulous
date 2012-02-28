@@ -70,15 +70,45 @@ class TestWriteTableToFile(unittest.TestCase):
 
     def test_empty_table_doesnt_write(self):
         """an empty high score table shouldn't create a file"""
+        # TODO
         pass
 
     def test_raise_proper_exception(self):
         """if we can't write, the correct exception is raised"""
+        # TODO
         pass
 
 
 class TestReadTableFromFile(unittest.TestCase):
+    # TODO
     pass
+
+
+class TestTableQuery(unittest.TestCase):
+    def setUp(self):
+        self.table = HighScoreTable()
+        self.table.add_score('Fung', 1000)
+        self.table.add_score('Zutroy', 400)
+        self.table.add_score('Dildor', 60)
+        self.table.add_score('Flopsy', 20)
+        self.table.max_length = 5
+
+    def test_query_empty_table(self):
+        """if the table is empty, the query should always be true"""
+        self.table.clear()
+        self.assertTrue(self.table.query(0))
+
+    def test_query_should_fail(self):
+        """full table, query with a score lower than current lowest"""
+        self.table.add_score('Prasdf', 10)
+        self.assertFalse(self.table.query(5))
+
+    def test_query_should_pass_full(self):
+        self.table.add_score('Prasdf', 10)
+        self.assertTrue(self.table.query(20))
+
+    def test_query_should_pass_not_full(self):
+        self.assertTrue(self.table.query(5))
 
 
 if  __name__ == "__main__":

@@ -13,12 +13,14 @@ class HighScoreTable:
 
     def add_score(self, name, score): # TODO: add date?
         """adds score to table and re-sorts"""
-        self.scores.append((name, score));
-        self.sort()
-        # if we ever add more than one score at a time, this will have to be
-        # changed to accomodate that
-        if len(self.scores) > self.max_length:
-            del self.scores[self.max_length]
+        # if score is lower than lowest score and table is full, don't bother
+        if self.query(score):
+            self.scores.append((name, score));
+            self.sort()
+            # if we ever add more than one score at a time, this will have to be
+            # changed to accomodate that
+            if len(self.scores) > self.max_length:
+                del self.scores[self.max_length]
 
     def read_from_file(self):
         # TODO: error checking, etc.
@@ -38,6 +40,22 @@ class HighScoreTable:
         """sort by high score, descending"""
         self.scores = sorted(self.scores, key=lambda score: score[1],
                              reverse=True)
+
+    def query(self, score):
+        """returns true if given score is high enough to get in the table"""
+        # empty table means any score is good enough
+        if self.is_empty():
+            return True
+        # non-full table means any score is good enough
+        elif len(self.scores) < self.max_length:
+            return True
+        # score is greater than lowest score (if there's a tie the one already
+        # in the table has precedence)
+        elif score > self.scores[-1][1]:
+            return True
+        # no good!
+        else:
+            return False
 
     def print_scores(self):
         """just print to console"""
