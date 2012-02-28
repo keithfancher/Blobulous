@@ -23,8 +23,16 @@ class HighScoreTable:
                 del self.scores[self.max_length]
 
     def read_from_file(self):
-        # TODO: error checking, etc.
-        score_file = open(self.filename, 'rb')
+        """if the file exists, read from it; if it doesn't exist, just init an
+        empty table"""
+        # if the file doesn't exist, clear the table and return
+        try:
+            score_file = open(self.file_name, 'rb')
+        except IOError as e:
+            self.clear()
+            return
+
+        # otherwise load the data and close the file
         self.scores = pickle.load(score_file)
         score_file.close()
 
@@ -57,9 +65,13 @@ class HighScoreTable:
         else:
             return False
 
-    def print_scores(self):
-        """just print to console"""
-        print self.scores
+    def get_table_with_names(self):
+        pass
+
+    def get_table_without_names(self):
+        """returns a string of the high score table with just the scores, not
+        assicated with names"""
+        return "Testing\nfuck\nyou"
 
     def clear(self):
         """empty the high score table"""

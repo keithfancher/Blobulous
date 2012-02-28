@@ -80,8 +80,14 @@ class TestWriteTableToFile(unittest.TestCase):
 
 
 class TestReadTableFromFile(unittest.TestCase):
-    # TODO
-    pass
+    def setUp(self):
+        self.table = HighScoreTable()
+
+    def test_file_doesnt_exist_create_empty_table(self):
+        """if the file doesn't exist, it should just create an empty table"""
+        self.table.file_name = "asdfasdfsadf"
+        self.table.read_from_file()
+        self.assertTrue(self.table.is_empty())
 
 
 class TestTableQuery(unittest.TestCase):
