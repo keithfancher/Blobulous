@@ -4,8 +4,8 @@ import pickle
 class HighScoreTable:
     """Use Pickle to read/write scores to a file"""
 
-    max_length = 10 # 10 top scores max
-    file_name = "highscore.dat"
+    max_length = 5 # 5 top scores max
+    file_name = "highscore.pkl"
     scores = [] # a list of tuples (name, score)
 
     def __init__(self):
@@ -15,12 +15,24 @@ class HighScoreTable:
         """adds score to table and re-sorts"""
         self.scores.append((name, score));
         self.sort()
+        # if we ever add more than one score at a time, this will have to be
+        # changed to accomodate that
+        if len(self.scores) > self.max_length:
+            del self.scores[self.max_length]
 
     def read_from_file(self):
-        pass
+        # TODO: error checking, etc.
+        score_file = open(self.filename, 'rb')
+        self.scores = pickle.load(score_file)
+        score_file.close()
 
     def write_to_file(self):
-        pass
+        """dump high scores to file using pickle module"""
+        if self.scores:
+            # TODO: error checking, etc.
+            score_file = open(self.file_name, 'wb')
+            pickle.dump(self.scores, score_file)
+            score_file.close()
 
     def sort(self):
         """sort by high score, descending"""
