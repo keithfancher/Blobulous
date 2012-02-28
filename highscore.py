@@ -66,12 +66,21 @@ class HighScoreTable:
             return False
 
     def get_table_with_names(self):
+        """returns a string of the high score table (with names), for you to do
+        with what you will!"""
+        # TODO
         pass
 
     def get_table_without_names(self):
         """returns a string of the high score table with just the scores, not
         assicated with names"""
-        return "Testing\nfuck\nyou"
+        output = "HIGH SCORES:\n============\n"
+        if self.is_empty():
+            output += "[ NONE YET! ]\n"
+        else:
+            for i in xrange(len(self.scores)):
+                output += "{:d}:\t{:d}\n".format(i + 1, self.scores[i][1])
+        return output
 
     def clear(self):
         """empty the high score table"""
