@@ -82,7 +82,7 @@ def main():
     # Create the mouse cursor
     cursor = Cursor()
     # Setting the cursor to invisible seems to alter the mouse sensitivity
-    # quite a bit, which I *don't* want.
+    # quite a bit, which I *don't* want. FIXME
 #    pygame.mouse.set_visible(False)
 
     # Spawn NUM_INIT_ENEMIES random enemies
@@ -90,8 +90,8 @@ def main():
         enemies.add(Enemy(randomize=True))
 
     # Spawn NUM_INIT_POWERUPS random powerups
-    # These just live in the "enemies" group, makes things easier... they're
-    # all Sprite objects anyway, and they're basically just benign enemies.
+    # These live in the "enemies" sprite group, since they're basically just a
+    # special type of enemy.
     for i in xrange(s.NUM_INIT_POWERUPS):
         enemies.add(Powerup(randomize=True))
 
@@ -153,18 +153,14 @@ def main():
                     player.nuke(enemies)
 
         # Move the cursor... maybe only do this when we get mouse movement?
+        # TODO: is getting this directly faster than polling like we do above?
 #        cursor.rect.center = pygame.mouse.get_pos()
 
-        # Have to check if we're over an enemy with the mouse every frame even
-        # when there isn't a MOUSEMOTION event, 'cause the player could be
-        # holding down the button and an enemy could move under the mouse.
-        #
-        # This seems pretty inefficient, there's probably a better way to do
-        # this.
+        #  Target the proper enemies. This seems pretty inefficient -- there's
+        #  probably a better way to do this.
         if mouse_down:
-            mouse_position = pygame.mouse.get_pos()
             for enemy in enemies:
-                if enemy.rect.collidepoint(mouse_position):
+                if enemy.rect.collidepoint(pygame.mouse.get_pos()):
                     player.target_enemy(enemy)
 
         # Randomly spawn enemies. The frequency of enemies spawning depends on
@@ -176,9 +172,11 @@ def main():
         if random.randint(1, 175) == 42 and not game_paused:
             enemies.add(Powerup(randomize=True))
 
-        # If a player has collided with anything at all.
-        # Note that colliding with a Powerup will also kill the player. He's
-        # gotta SHOOT the powerup if he wants it.
+        # If a player has collided with anything at all.  Note that colliding
+        # with a Powerup will also kill the player. He's gotta SHOOT the
+        # powerup if he wants it.
+        #
+        # TODO: probably over-optimizing here, test performance impact and fix
         if not s.PLAYER_INVINCIBLE:
             if pygame.sprite.spritecollideany(player, enemies):
 
@@ -198,22 +196,13 @@ def main():
                         print "That was your last life! You're dead."
                         print "Final score: %d" % player.score
 
-        # Clear screen
         screen.fill(pygame.Color('black'))
-
-        # Game is paused
         if game_paused and not intro_screen:
             draw_pause_screen(screen)
-
-        # Intro screen
         elif game_paused and intro_screen:
             draw_intro_screen(screen)
-
-        # The player is dead
         elif player.is_dead():
             draw_death_screen(screen, player.score)
-
-        # Otherwise update/draw everything normally
         else:
             # All the sprite groups
             all_sprites.update()
@@ -226,16 +215,14 @@ def main():
             player.draw_nukes(screen)
             player.draw_num_lives(screen)
 
-        # Draw the FPS
+        # Draw FPS
         if s.SHOW_FPS:
             print_text(screen, "%.2f" % clock.get_fps(), 20,
                        pygame.Color('white'),
                        bottom=screen.get_rect().bottom - 8, left=10)
 
-        # Flip screen
+        # Flip & pause
         pygame.display.flip()
-
-        # Pause
         clock.tick(s.FPS)
 
 
