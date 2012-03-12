@@ -7,9 +7,12 @@ from util import print_text
 
 class Player(pygame.sprite.Sprite):
 
-    # Speed vector
+    # Velocity vector
     delta_x = 0
     delta_y = 0
+
+    # Scalar!
+    speed = 3
 
     # All the enemies/powerups the player is targeting
     targeted = pygame.sprite.Group()
@@ -38,8 +41,29 @@ class Player(pygame.sprite.Sprite):
         self.nuke_image = pygame.image.load("images/nuke.png").convert()
         self.nuke_image.set_colorkey(pygame.Color('black'))
 
-    def changespeed(self, x, y):
+    def process_keypress(self, key):
+        if key == pygame.K_LEFT:
+            self.change_velocity(-self.speed, 0)
+        if key == pygame.K_RIGHT:
+            self.change_velocity(self.speed, 0)
+        if key == pygame.K_UP:
+            self.change_velocity(0, -self.speed)
+        if key == pygame.K_DOWN:
+            self.change_velocity(0, self.speed)
+
+    def process_keyrelease(self, key):
+        if key == pygame.K_LEFT:
+            self.change_velocity(self.speed, 0)
+        if key == pygame.K_RIGHT:
+            self.change_velocity(-self.speed, 0)
+        if key == pygame.K_UP:
+            self.change_velocity(0, self.speed)
+        if key == pygame.K_DOWN:
+            self.change_velocity(0, -self.speed)
+
+    def change_velocity(self, x, y):
         """Change speed/direction of player"""
+        # TODO: should this be = rather than +=? Why add here?
         self.delta_x += x
         self.delta_y += y
 

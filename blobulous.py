@@ -111,16 +111,8 @@ def main():
             if event.type == pygame.QUIT:
                 shut_down(screen)
 
-            # Set the speed based on the key pressed
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    player.changespeed(-3, 0)
-                if event.key == pygame.K_RIGHT:
-                    player.changespeed(3, 0)
-                if event.key == pygame.K_UP:
-                    player.changespeed(0, -3)
-                if event.key == pygame.K_DOWN:
-                    player.changespeed(0, 3)
+                player.process_keypress(event.key)
 
                 if event.key == pygame.K_ESCAPE:
                     if game_paused or player.is_dead():
@@ -139,16 +131,8 @@ def main():
                         game_paused = False
                         pygame.event.set_grab(True) # grab for less annoyance
 
-            # Reset speed when key goes up
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    player.changespeed(3, 0)
-                if event.key == pygame.K_RIGHT:
-                    player.changespeed(-3, 0)
-                if event.key == pygame.K_UP:
-                    player.changespeed(0, 3)
-                if event.key == pygame.K_DOWN:
-                    player.changespeed(0, -3)
+                player.process_keyrelease(event.key)
 
             # Update the cursor position
             if event.type == pygame.MOUSEMOTION:
