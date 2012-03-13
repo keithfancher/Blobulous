@@ -172,29 +172,19 @@ def main():
         if random.randint(1, 175) == 42 and not game_paused:
             enemies.add(Powerup(randomize=True))
 
-        # If a player has collided with anything at all.  Note that colliding
-        # with a Powerup will also kill the player. He's gotta SHOOT the
-        # powerup if he wants it.
-        #
-        # TODO: probably over-optimizing here, test performance impact and fix
+        # Checks for collisions, destroys appropriate objects. Note use of
+        # collide_circle -- a bit slower, but much more accurate for our
+        # purposes.
         if not s.PLAYER_INVINCIBLE:
-            if pygame.sprite.spritecollideany(player, enemies):
-
-                # This actually does the work of checking if the player should
-                # die, and destroying any objects they've collided with. This
-                # function is a bit slow, so only call it when we already KNOW
-                # there's been a collision, instead of every frame. Note use of
-                # collide_circle -- a bit slower, but much more accurate for
-                # our purposes.
-                if pygame.sprite.spritecollide(player, enemies, True,
-                                               pygame.sprite.collide_circle):
-                    player.untarget_all()
-                    player.decrease_lives()
-                    if player.is_dead():
-                        pygame.event.set_grab(False)
-                        mouse_down = False
-                        print "That was your last life! You're dead."
-                        print "Final score: %d" % player.score
+            if pygame.sprite.spritecollide(player, enemies, True,
+                                           pygame.sprite.collide_circle):
+                player.untarget_all()
+                player.decrease_lives()
+                if player.is_dead():
+                    pygame.event.set_grab(False)
+                    mouse_down = False
+                    print "That was your last life! You're dead."
+                    print "Final score: %d" % player.score
 
         screen.fill(pygame.Color('black'))
         if game_paused and not intro_screen:
