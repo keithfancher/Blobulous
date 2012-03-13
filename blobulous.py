@@ -179,8 +179,6 @@ def main():
                 player.decrease_lives()
                 if player.is_dead():
                     pygame.event.set_grab(False)
-                    print "That was your last life! You're dead."
-                    print "Final score: %d" % player.score
 
         screen.fill(pygame.Color('black'))
         if game_paused and not intro_screen:

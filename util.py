@@ -8,7 +8,7 @@ def print_text(screen, text, size, color, **kwargs):
     get_rect(), and can be used to easily position the text on the target
     surface."""
     if not pygame.font:
-        print "Warning: fonts disabled. Install pygame.font!"
+        sys.stderr.write("Warning: fonts disabled. Install pygame.font!\n")
     else:
         font = pygame.font.Font('fonts/inconsolata.otf', size)
         text_surface = font.render(text, True, color)
@@ -20,7 +20,7 @@ def shut_down(screen, message="Shutting everything down..."):
     """There's an annoying delay while Pygame shuts down -- this function gives
     the user some visual indication that things are closing down properly, and
     the game's not just hanging."""
-    print message
+    sys.stderr.write(message + "\n")
     print_text(screen, message, 25, pygame.Color('red'),
                midbottom=screen.get_rect().midbottom)
     pygame.display.flip()
