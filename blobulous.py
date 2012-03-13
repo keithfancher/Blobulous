@@ -21,6 +21,12 @@ def should_spawn_enemy(score):
     return random.randint(1, 30) in range(1, prob_range + 1)
 
 
+def left_mouse_down():
+    """Return True if left mouse button is being held down, False otherwise"""
+    (left, middle, right) = pygame.mouse.get_pressed()
+    return left
+
+
 def draw_pause_screen(surface):
     """Draw pause screen to given surface"""
     print_text(surface, "PAUSED", 100, pygame.Color('red'),
@@ -95,10 +101,6 @@ def main():
     for i in xrange(s.NUM_INIT_POWERUPS):
         enemies.add(Powerup(randomize=True))
 
-    # Mouse state... need to know if the button is held down or not, not just
-    # when it's pressed or released. Maybe PyGame has a better way to do this?
-    mouse_down = False
-
     # Start the game paused and on the intro screen. This is a lazy way to
     # handle game state, but it works.
     game_paused = True
@@ -121,7 +123,6 @@ def main():
                         game_paused = True
                         pygame.event.set_grab(False) # ungrab when paused
                         player.untarget_all() # untarget all when paused
-                        mouse_down = False # even if the mouse is actually down
 
                 # When the game is paused, any non-ESC key will unpause
                 else:
@@ -142,13 +143,9 @@ def main():
             if event.type == pygame.MOUSEBUTTONUP:
                 # Button 1 is left mouse button
                 if event.button == 1 and not (game_paused or player.is_dead()):
-                    mouse_down = False
                     player.kill_targeted()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and not (game_paused or player.is_dead()):
-                    mouse_down = True
-
-                # Button 3 is right... nuke 'em!
+                # 3 is right button... nuke 'em all!
                 if event.button == 3 and not (game_paused or player.is_dead()):
                     player.nuke(enemies)
 
@@ -158,7 +155,7 @@ def main():
 
         #  Target the proper enemies. This seems pretty inefficient -- there's
         #  probably a better way to do this.
-        if mouse_down:
+        if left_mouse_down() and not (game_paused or player.is_dead()):
             for enemy in enemies:
                 if enemy.rect.collidepoint(pygame.mouse.get_pos()):
                     player.target_enemy(enemy)
@@ -182,7 +179,6 @@ def main():
                 player.decrease_lives()
                 if player.is_dead():
                     pygame.event.set_grab(False)
-                    mouse_down = False
                     print "That was your last life! You're dead."
                     print "Final score: %d" % player.score
 
