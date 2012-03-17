@@ -87,22 +87,17 @@ def main():
     Explosion.containers = all_sprites, explosions
     Cursor.containers = all_sprites, cursors
 
-    # Create the player object
+    # Create the player and cursor
     player = Player(s.SCREEN_W / 2, s.SCREEN_H / 2)
-
-    # Create the mouse cursor
     cursor = Cursor()
+
     # Setting the cursor to invisible seems to alter the mouse sensitivity
     # quite a bit, which I *don't* want. FIXME
 #    pygame.mouse.set_visible(False)
 
-    # Spawn NUM_INIT_ENEMIES random enemies
+    # Spawn random enemies and powerups
     for i in xrange(s.NUM_INIT_ENEMIES):
         enemies.add(Enemy(randomize=True))
-
-    # Spawn NUM_INIT_POWERUPS random powerups
-    # These live in the "enemies" sprite group, since they're basically just a
-    # special type of enemy.
     for i in xrange(s.NUM_INIT_POWERUPS):
         enemies.add(Powerup(randomize=True))
 
@@ -113,7 +108,6 @@ def main():
 
     # Main event loop
     while True:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 shut_down(screen)
