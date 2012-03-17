@@ -21,6 +21,11 @@ def should_spawn_enemy(score):
     return random.randint(1, 30) in range(1, prob_range + 1)
 
 
+def should_spawn_powerup():
+    """For now there's a 1/175 chance per frame a powerup will spawn"""
+    return random.randint(1, 175) == 42
+
+
 def left_mouse_down():
     """Return True if left mouse button is being held down, False otherwise"""
     (left, middle, right) = pygame.mouse.get_pressed()
@@ -160,13 +165,10 @@ def main():
                 if enemy.rect.collidepoint(pygame.mouse.get_pos()):
                     player.target_enemy(enemy)
 
-        # Randomly spawn enemies. The frequency of enemies spawning depends on
-        # the score.
+        # Randomly spawn enemies and powerups.
         if should_spawn_enemy(player.score) and not game_paused:
             enemies.add(Enemy(randomize=True))
-
-        # And a 1/175 chance a new powerup will spawn...
-        if random.randint(1, 175) == 42 and not game_paused:
+        if should_spawn_powerup() and not game_paused:
             enemies.add(Powerup(randomize=True))
 
         # Checks for collisions, destroys appropriate objects. Note use of
