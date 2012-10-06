@@ -7,7 +7,7 @@ from explosion import Explosion
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, *containers):
+    def __init__(self, explosion_container, *containers):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, containers)
 
@@ -27,6 +27,11 @@ class Enemy(pygame.sprite.Sprite):
         self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
 
+        # Need to pass the enemy a sprite group to contain its explosion after
+        # it's destroyed, so the explosion can live on after the enemy has long
+        # since bitten the dust
+        self.explosion_container = explosion_container
+
         self.random_spawn()
 
     def update(self):
@@ -38,7 +43,7 @@ class Enemy(pygame.sprite.Sprite):
     def kill(self):
         """Override Sprite.kill() so enemies (and their descendent classes)
         will explode instead of just disappearing"""
-        Explosion(self.rect.center, self.groups()) # in enemy's sprite groups
+        Explosion(self.rect.center, self.explosion_container)
         pygame.sprite.Sprite.kill(self)
 
     def kill_if_offscreen(self):

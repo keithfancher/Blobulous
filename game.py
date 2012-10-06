@@ -35,7 +35,7 @@ class Game(object):
     def spawn_enemies(self):
         """Spawn initial enemies in level."""
         for dummy in xrange(s.NUM_INIT_ENEMIES):
-            self.enemies.add(Enemy(self.all_sprites, self.enemies))
+            self.enemies.add(Enemy(self.all_sprites, self.all_sprites, self.enemies))
 
     def spawn_powerups(self):
         """Spawn initial powerups in level."""
@@ -141,7 +141,7 @@ class Game(object):
 
         # Randomly spawn enemies and powerups.
         if self.should_spawn_enemy() and not self.game_paused:
-            self.enemies.add(Enemy(self.all_sprites, self.enemies))
+            self.enemies.add(Enemy(self.all_sprites, self.all_sprites, self.enemies))
         if self.should_spawn_powerup() and not self.game_paused:
             self.enemies.add(Powerup(self.all_sprites, self.enemies))
 
