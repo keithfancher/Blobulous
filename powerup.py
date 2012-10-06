@@ -1,4 +1,3 @@
-import random
 import pygame
 
 from enemy import Enemy
