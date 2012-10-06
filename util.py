@@ -25,3 +25,9 @@ def shut_down(screen, message="Shutting everything down..."):
                midbottom=screen.get_rect().midbottom)
     pygame.display.flip()
     sys.exit()
+
+
+def left_mouse_down():
+    """Return True if left mouse button is being held down, False otherwise."""
+    (left, middle, right) = pygame.mouse.get_pressed()
+    return left
