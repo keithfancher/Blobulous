@@ -1,6 +1,10 @@
 TODO
 ====
 
+* real game loop, don't make 'em restart every time
+
+* real packaging/install business
+
 * randomize enemy sprite -- it's boring as-is
 
 * say "APESHIT" somewhere when they go apeshit... and/or play a sound?
