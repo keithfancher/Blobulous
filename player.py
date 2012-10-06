@@ -28,6 +28,9 @@ class Player(pygame.sprite.Sprite):
         self.nukes = 0
         self.radius = 10 # Used for circular collision detection
         self.images = [] # Images used for animation
+        self.image = None # Poor guy, no self image :(
+        self.nuke_image = None
+        self.rect = None
 
         self.load_images(x, y)
 
@@ -46,6 +49,7 @@ class Player(pygame.sprite.Sprite):
         self.nuke_image.set_colorkey(pygame.Color('black'))
 
     def process_keypress(self, key):
+        """Process keypress, move player accordingly."""
         if key == pygame.K_LEFT:
             self.change_velocity(-self.speed, 0)
         if key == pygame.K_RIGHT:
@@ -56,6 +60,7 @@ class Player(pygame.sprite.Sprite):
             self.change_velocity(0, self.speed)
 
     def process_keyrelease(self, key):
+        """Process key release, un-move player accordingly."""
         if key == pygame.K_LEFT:
             self.change_velocity(self.speed, 0)
         if key == pygame.K_RIGHT:
@@ -67,7 +72,6 @@ class Player(pygame.sprite.Sprite):
 
     def change_velocity(self, x, y):
         """Change speed/direction of player"""
-        # TODO: should this be = rather than +=? Why add here?
         self.delta_x += x
         self.delta_y += y
 
@@ -202,7 +206,7 @@ class Player(pygame.sprite.Sprite):
         # draw dividing lines
         segment_width = meter_w / self.max_targets
         line_x_pos = 0
-        for i in xrange(self.max_targets - 1):
+        for dummy in xrange(self.max_targets - 1):
             line_x_pos += segment_width
             pygame.draw.line(screen, pygame.Color('black'),
                 (surface_rect.left + line_x_pos, surface_rect.top),
