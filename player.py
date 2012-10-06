@@ -29,7 +29,11 @@ class Player(pygame.sprite.Sprite):
         self.radius = 10 # Used for circular collision detection
         self.images = [] # Images used for animation
 
-        # Load images
+        self.load_images(x, y)
+
+    def load_images(self, x, y):
+        """Loads player images. Takes player x and y position so it can set the
+        player's rect accordingly."""
         self.images.append(pygame.image.load("images/player_off.png").convert())
         self.images.append(pygame.image.load("images/player_on.png").convert())
         self.images[0].set_colorkey(pygame.Color('black'))
@@ -104,15 +108,15 @@ class Player(pygame.sprite.Sprite):
         self.targeted.empty()
 
     def kill_targeted(self):
-        """Kills all targeted enemies, and tallies up the points"""
-
-        # 100 points for every enemy killed, then an additional multiplier for
-        # killing mutliple enemies in one go.
+        """Kills all targeted enemies and tallies up the points. 100 points for
+        every enemy killed, then an additional multiplier for killing mutliple
+        enemies in one go."""
         if self.apeshit_mode:
             # Apeshit mode doubles the score you'd get
             self.score += 100 * len(self.targeted) * len(self.targeted) * 2
         else:
             self.score += 100 * len(self.targeted) * len(self.targeted)
+
         for target in self.targeted:
             if isinstance(target, Powerup):
                 if self.apeshit_mode:
