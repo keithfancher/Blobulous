@@ -4,7 +4,6 @@ import random
 import settings as s
 from cursor import Cursor
 from enemy import Enemy
-from explosion import Explosion
 from player import Player
 from powerup import Powerup
 from util import print_text, shut_down, left_mouse_down
@@ -16,15 +15,13 @@ class Game(object):
         self.screen = pygame.display.set_mode([s.SCREEN_W, s.SCREEN_H])
         self.clock = pygame.time.Clock()
 
-        # Create sprite groups, init them
+        # Create sprite groups
         self.enemies = pygame.sprite.Group()
-        self.explosions = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.RenderPlain()
-        self.init_sprite_groups()
 
         # Create player and cursor
-        self.player = Player(s.SCREEN_W / 2, s.SCREEN_H / 2)
-        self.cursor = Cursor()
+        self.player = Player(s.SCREEN_W / 2, s.SCREEN_H / 2, self.all_sprites)
+        self.cursor = Cursor(self.all_sprites)
 
         # Start the game paused and on the intro screen. This is a lazy way to
         # handle game state, but it works.
@@ -35,25 +32,15 @@ class Game(object):
         # quite a bit, which I *don't* want. FIXME
         #pygame.mouse.set_visible(False)
 
-    def init_sprite_groups(self):
-        """Assign default sprite groups as class variables to our different
-        sprite classes. This is a pretty nasty/hackish way to do this, but
-        makes drawing everything disturbingly easy..."""
-        Player.containers = self.all_sprites
-        Enemy.containers = self.all_sprites, self.enemies
-        Powerup.containers = self.all_sprites, self.enemies # need own group?
-        Explosion.containers = self.all_sprites, self.explosions
-        Cursor.containers = self.all_sprites
-
     def spawn_enemies(self):
         """Spawn initial enemies in level."""
-        for i in xrange(s.NUM_INIT_ENEMIES):
-            self.enemies.add(Enemy(randomize=True))
+        for dummy in xrange(s.NUM_INIT_ENEMIES):
+            self.enemies.add(Enemy(self.all_sprites, self.enemies))
 
     def spawn_powerups(self):
         """Spawn initial powerups in level."""
-        for i in xrange(s.NUM_INIT_POWERUPS):
-            self.enemies.add(Powerup(randomize=True))
+        for dummy in xrange(s.NUM_INIT_POWERUPS):
+            self.enemies.add(Powerup(self.all_sprites, self.enemies))
 
     def should_spawn_enemy(self):
         """There's a (prob_range / 30) chance an enemy will spawn. prob_range
@@ -154,9 +141,9 @@ class Game(object):
 
         # Randomly spawn enemies and powerups.
         if self.should_spawn_enemy() and not self.game_paused:
-            self.enemies.add(Enemy(randomize=True))
+            self.enemies.add(Enemy(self.all_sprites, self.enemies))
         if self.should_spawn_powerup() and not self.game_paused:
-            self.enemies.add(Powerup(randomize=True))
+            self.enemies.add(Powerup(self.all_sprites, self.enemies))
 
         # Checks for collisions, destroys appropriate objects. Note use of
         # collide_circle -- a bit slower, but much more accurate for our

@@ -7,9 +7,9 @@ from util import print_text
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, *containers):
         # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self, self.containers)
+        pygame.sprite.Sprite.__init__(self, containers)
 
         # Velocity vector
         self.delta_x = 0
@@ -123,6 +123,7 @@ class Player(pygame.sprite.Sprite):
                     self.nukes = 1 # Only 1 nuke at a time
                 else:
                     self.power_up()
+            self.untarget_enemy(target)
             target.kill()
 
     def nuke(self, enemy_group):

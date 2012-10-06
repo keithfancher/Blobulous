@@ -7,9 +7,9 @@ from explosion import Explosion
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
+    def __init__(self, *containers):
         # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self, self.containers)
+        pygame.sprite.Sprite.__init__(self, containers)
 
         # Set speed vector
         self.delta_x = 0
@@ -27,12 +27,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image.set_colorkey(pygame.Color('black'))
         self.rect = self.image.get_rect()
 
-        if randomize:
-            self.random_spawn()
-        else:
-            self.rect.center = (x, y)
-            self.delta_x = dx
-            self.delta_y = dy
+        self.random_spawn()
 
     def update(self):
         """Update enemy position"""
@@ -43,7 +38,7 @@ class Enemy(pygame.sprite.Sprite):
     def kill(self):
         """Override Sprite.kill() so enemies (and their descendent classes)
         will explode instead of just disappearing"""
-        Explosion(self.rect.center) # added to proper Group automatically
+        Explosion(self.rect.center, self.groups()) # in enemy's sprite groups
         pygame.sprite.Sprite.kill(self)
 
     def kill_if_offscreen(self):

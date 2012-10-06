@@ -9,9 +9,9 @@ class Powerup(Enemy):
     something, but this works great for now. I'll likely change this if/when I
     implement powerdowns."""
 
-    def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
+    def __init__(self, *containers):
         # Call the parent's constructor (which calls Sprite's constructor...)
-        Enemy.__init__(self, x, y, dx, dy, randomize)
+        Enemy.__init__(self, containers)
 
         # Load the image
         self.image = pygame.image.load("images/powerup.png").convert()
@@ -23,9 +23,4 @@ class Powerup(Enemy):
         # we're comparing with circles so this needs *some* radius value.
         self.radius = 20
 
-        if randomize:
-            self.random_spawn()
-        else:
-            self.rect.center = (x, y)
-            self.delta_x = dx
-            self.delta_y = dy
+        self.random_spawn()

@@ -3,9 +3,9 @@ import pygame
 
 class Explosion(pygame.sprite.Sprite):
 
-    def __init__(self, pos):
+    def __init__(self, pos, *containers):
         # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self, self.containers)
+        pygame.sprite.Sprite.__init__(self, containers)
 
         self.images = []
         self.frame = 0
