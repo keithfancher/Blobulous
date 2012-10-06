@@ -7,20 +7,20 @@ from explosion import Explosion
 
 class Enemy(pygame.sprite.Sprite):
 
-    # Set speed vector
-    delta_x = 0
-    delta_y = 0
-
-    # Whether this enemy is currently targeted by the player
-    targeted = False
-
-    # Used by the circle collision detection. Allows a slightly smaller and
-    # more accurate hit "box".
-    radius = 21
-
     def __init__(self, x=0, y=0, dx=0, dy=0, randomize=False):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, self.containers)
+
+        # Set speed vector
+        self.delta_x = 0
+        self.delta_y = 0
+
+        # Whether this enemy is currently targeted by the player
+        self.targeted = False
+
+        # Used by the circle collision detection. Allows a slightly smaller and
+        # more accurate hit "box".
+        self.radius = 21
 
         # Load the image
         self.image = pygame.image.load("images/enemy.png").convert()

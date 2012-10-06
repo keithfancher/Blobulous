@@ -7,27 +7,27 @@ from util import print_text
 
 class Player(pygame.sprite.Sprite):
 
-    # Velocity vector
-    delta_x = 0
-    delta_y = 0
-
-    # Scalar!
-    speed = 3
-
-    # All the enemies/powerups the player is targeting
-    targeted = pygame.sprite.Group()
-
-    max_targets = 2 # Max targets... increase w/ powerups
-    extra_lives = 2 # Starting number
-    score = 0
-    apeshit_mode = False # Super powered up!!!
-    nukes = 0
-    radius = 10 # Used for circular collision detection
-    images = [] # Images used for animation
-
     def __init__(self, x, y):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, self.containers)
+
+        # Velocity vector
+        self.delta_x = 0
+        self.delta_y = 0
+
+        # Scalar!
+        self.speed = 3
+
+        # All the enemies/powerups the player is targeting
+        self.targeted = pygame.sprite.Group()
+
+        self.max_targets = 2 # Max targets... increase w/ powerups
+        self.extra_lives = 2 # Starting number
+        self.score = 0
+        self.apeshit_mode = False # Super powered up!!!
+        self.nukes = 0
+        self.radius = 10 # Used for circular collision detection
+        self.images = [] # Images used for animation
 
         # Load images
         self.images.append(pygame.image.load("images/player_off.png").convert())

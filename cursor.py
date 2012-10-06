@@ -2,7 +2,6 @@ import pygame
 
 
 class Cursor(pygame.sprite.Sprite):
-    position = (0, 0)
 
     def __init__(self, x=0, y=0):
         # Call the parent's constructor

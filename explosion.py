@@ -3,13 +3,13 @@ import pygame
 
 class Explosion(pygame.sprite.Sprite):
 
-    images = []
-    frame = 0
-    frame_count = 0
-
     def __init__(self, pos):
         # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self, self.containers)
+
+        self.images = []
+        self.frame = 0
+        self.frame_count = 0
 
         # Load images (7 frames)
         for i in xrange(7):
