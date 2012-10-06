@@ -16,6 +16,10 @@ class Game(object):
         self.screen = pygame.display.set_mode([s.SCREEN_W, s.SCREEN_H])
         self.clock = pygame.time.Clock()
 
+        # Create sprite groups, init them
+        self.enemies = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
+        self.all_sprites = pygame.sprite.RenderPlain()
         self.init_sprite_groups()
 
         # Create player and cursor
@@ -32,20 +36,14 @@ class Game(object):
         #pygame.mouse.set_visible(False)
 
     def init_sprite_groups(self):
-        """Initialize all the game's sprite groups and assign default groups as
-        class variables to our different sprite classes."""
-        self.players = pygame.sprite.Group()
-        self.enemies = pygame.sprite.Group()
-        self.explosions = pygame.sprite.Group()
-        self.cursors = pygame.sprite.Group()
-        self.all_sprites = pygame.sprite.RenderPlain()
-
-        # Assign default groups to each sprite class
-        Player.containers = self.all_sprites, self.players
+        """Assign default sprite groups as class variables to our different
+        sprite classes. This is a pretty nasty/hackish way to do this, but
+        makes drawing everything disturbingly easy..."""
+        Player.containers = self.all_sprites
         Enemy.containers = self.all_sprites, self.enemies
-        Powerup.containers = self.all_sprites, self.enemies # give their own group?
+        Powerup.containers = self.all_sprites, self.enemies # need own group?
         Explosion.containers = self.all_sprites, self.explosions
-        Cursor.containers = self.all_sprites, self.cursors
+        Cursor.containers = self.all_sprites
 
     def spawn_enemies(self):
         """Spawn initial enemies in level."""
@@ -57,48 +55,48 @@ class Game(object):
         for i in xrange(s.NUM_INIT_POWERUPS):
             self.enemies.add(Powerup(randomize=True))
 
-    def should_spawn_enemy(self, score):
+    def should_spawn_enemy(self):
         """There's a (prob_range / 30) chance an enemy will spawn. prob_range
         starts at 1, and increases by 1 every time the score increases by
         10,000.  If the player manages to get to 30/30, an enemy will spawn
         every frame..."""
-        prob_range = (score / 10000) + 1
+        prob_range = (self.player.score / 10000) + 1
         return random.randint(1, 30) in range(1, prob_range + 1)
 
     def should_spawn_powerup(self):
         """For now there's a 1/175 chance per frame a powerup will spawn."""
         return random.randint(1, 175) == 42
 
-    def draw_pause_screen(self, surface):
-        """Draw pause screen to given surface."""
-        print_text(surface, "PAUSED", 100, pygame.Color('red'),
-                   midbottom=surface.get_rect().center)
-        print_text(surface, "ESC to exit, any other key to resume", 25,
+    def draw_pause_screen(self):
+        """Draw pause screen."""
+        print_text(self.screen, "PAUSED", 100, pygame.Color('red'),
+                   midbottom=self.screen.get_rect().center)
+        print_text(self.screen, "ESC to exit, any other key to resume", 25,
                    pygame.Color('darkgray'),
-                   centerx=surface.get_rect().centerx,
-                   centery=surface.get_rect().centery + 20)
+                   centerx=self.screen.get_rect().centerx,
+                   centery=self.screen.get_rect().centery + 20)
 
-    def draw_intro_screen(self, surface):
-        """Draw intro screen to given surface."""
-        print_text(surface, "[BLOBULOUS]", 200, pygame.Color('red'),
-                   center=surface.get_rect().center)
-        print_text(surface, "Press any key to begin, or ESC to exit", 25,
+    def draw_intro_screen(self):
+        """Draw intro screen."""
+        print_text(self.screen, "[BLOBULOUS]", 200, pygame.Color('red'),
+                   center=self.screen.get_rect().center)
+        print_text(self.screen, "Press any key to begin, or ESC to exit", 25,
                    pygame.Color('darkgray'),
-                   centerx=surface.get_rect().centerx,
-                   centery=surface.get_rect().centery + 120)
+                   centerx=self.screen.get_rect().centerx,
+                   centery=self.screen.get_rect().centery + 120)
 
-    def draw_death_screen(self, surface, score):
-        """Draw death screen to given surface."""
-        print_text(surface, "YOU PIED.", 100, pygame.Color('red'),
-                   midbottom=surface.get_rect().center)
-        print_text(surface, "ESC to exit", 25,
+    def draw_death_screen(self):
+        """Draw death screen."""
+        print_text(self.screen, "YOU PIED.", 100, pygame.Color('red'),
+                   midbottom=self.screen.get_rect().center)
+        print_text(self.screen, "ESC to exit", 25,
                    pygame.Color('darkgray'),
-                   centerx=surface.get_rect().centerx,
-                   centery=surface.get_rect().centery + 20)
-        print_text(surface, "Final score: %d" % score, 30,
+                   centerx=self.screen.get_rect().centerx,
+                   centery=self.screen.get_rect().centery + 20)
+        print_text(self.screen, "Final score: %d" % self.player.score, 30,
                    pygame.Color('white'),
-                   centerx=surface.get_rect().centerx,
-                   centery=surface.get_rect().centery + 130)
+                   centerx=self.screen.get_rect().centerx,
+                   centery=self.screen.get_rect().centery + 130)
 
     def process_keypress(self, key):
         """Process key presses."""
@@ -147,10 +145,6 @@ class Game(object):
 
     def update(self):
         """Update the game state. Called every frame."""
-        # Move the cursor... maybe only do this when we get mouse movement?
-        # TODO: is getting this directly faster than polling like we do above?
-#        cursor.rect.center = pygame.mouse.get_pos()
-
         # Target the proper enemies. This seems pretty inefficient -- there's
         # probably a better way to do this.
         if left_mouse_down() and not (self.game_paused or self.player.is_dead()):
@@ -159,7 +153,7 @@ class Game(object):
                     self.player.target_enemy(enemy)
 
         # Randomly spawn enemies and powerups.
-        if self.should_spawn_enemy(self.player.score) and not self.game_paused:
+        if self.should_spawn_enemy() and not self.game_paused:
             self.enemies.add(Enemy(randomize=True))
         if self.should_spawn_powerup() and not self.game_paused:
             self.enemies.add(Powerup(randomize=True))
@@ -179,11 +173,11 @@ class Game(object):
         """Draw everything!"""
         self.screen.fill(pygame.Color('black'))
         if self.game_paused and not self.intro_screen:
-            self.draw_pause_screen(self.screen)
+            self.draw_pause_screen()
         elif self.game_paused and self.intro_screen:
-            self.draw_intro_screen(self.screen)
+            self.draw_intro_screen()
         elif self.player.is_dead():
-            self.draw_death_screen(self.screen, self.player.score)
+            self.draw_death_screen()
         else:
             # All the sprite groups
             self.all_sprites.update()
