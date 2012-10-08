@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 # Copyright 2011, 2012 Keith Fancher
 #
 # This file is part of Blobulous.
@@ -19,7 +16,28 @@
 # along with Blobulous.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from blobulous.main import main
+import pygame
+
+from game import Game
+
+
+def main():
+    """ My main() man!"""
+    pygame.init()
+    pygame.display.set_caption('Blobulous')
+
+    game = Game()
+
+    game.spawn_enemies()
+    game.spawn_powerups()
+
+    # main event loop
+    while True:
+        for event in pygame.event.get():
+            game.process_event(event)
+
+        game.update()
+        game.draw()
 
 
 if __name__ == '__main__':
